@@ -90,10 +90,10 @@ int main(int argc, char **argv)
 	// Load the program from host memory into interpreter's memory
 	for (unsigned int i = 0; i < (unsigned int) m_prgsz; i++)
 	{
-		chip8.m_memory[(unsigned int) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
+		chip8.m_memory[CHIP8_INITIAL_PC + i] = m_prg_buf[i];
 
 #ifdef DEBUG
-		printf("0x%x ", (unsigned int) chip8.m_memory[CHIP8_INITIAL_PC + i]);
+		printf("0x%x ", chip8.m_memory[CHIP8_INITIAL_PC + i]);
 
 		if (i == (((unsigned int) m_prgsz) - 1))
 		{
@@ -162,9 +162,18 @@ void m_exec(m_chip8 *chip8)
 
     switch(m_opcode & 0xF000)
     {
-    	case ANNN: // [ANN] I = NNN (Sets I to the address NNN.)
+    	case 0x6000: // [6XNN] Sets Vx to NN
 #ifdef DEBUG
-    		printf("A%x -> ANNN Instr. where NNN = addr. 0x%x\n", 
+			printf("6XNN (%x) [NN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x00FF);
+#endif
+			chip8->m_registers[((chip8->m_currentopcode & 0x0F00) >> 8)] =
+    			chip8->m_currentopcode & 0x00FF;
+    		chip8->m_programcounter += 2;
+    		break;
+
+    	case 0xA000: // [ANNN] Sets I to the address NNN
+#ifdef DEBUG
+    		printf("ANNN (%x) [NNN -> 0x%x]\n", 
     			chip8->m_currentopcode & 0x0FFF, chip8->m_currentopcode & 0x0FFF);
 #endif
     		chip8->m_index = chip8->m_currentopcode & 0x0FFF;
