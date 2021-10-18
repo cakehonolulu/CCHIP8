@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 
 #ifdef DEBUG
 	printf("Program size: %d bytes\n", (unsigned int) m_prgsz);
-	printf("Memory dump: \n");
+	printf("Program Memory Dump: \n");
 #endif
 
 	// Load the program from host memory into interpreter's memory
@@ -94,8 +94,8 @@ int main(int argc, char **argv)
 		chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
 
 #ifdef DEBUG
-		printf("%x", (unsigned int) chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i]);
-		
+		printf("0x%x ", (unsigned int) chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i]);
+
 		if (i == (((unsigned int) m_prgsz) - 1))
 		{
 			printf("\n");
@@ -109,8 +109,21 @@ int main(int argc, char **argv)
 	// Close the file pipe
 	fclose(m_prg);
 
+#ifdef DEBUG
+	printf("Loading the font into memory...\n");
+	printf("Font Memory Map: \n");
+#endif
 	for (unsigned int i = 0; i < CHIP8_FONT_SIZE; i++)
 	{
 		chip8.m_memory[i] = m_font[i];
+
+#ifdef DEBUG
+		printf("0x%x ", (unsigned int) chip8.m_memory[i]);
+		
+		if (i == (((unsigned int) CHIP8_FONT_SIZE) - 1))
+		{
+			printf("\n");
+		}
+#endif
 	}
 }
