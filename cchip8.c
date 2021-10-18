@@ -53,4 +53,11 @@ int main(int argc, char **argv)
 	// Initialize the keyboard data
 	memset(&chip8.m_keyboard, 0, sizeof(chip8.m_keyboard));
 
+	// Initialize the displau
+	memset(&chip8.m_display, 0, sizeof(chip8.m_display));
+
+	// Initialize the sound and delay timers
+	chip8.m_soundtmr = 0;
+	chip8.m_delaytmr = 0;
+
 }
