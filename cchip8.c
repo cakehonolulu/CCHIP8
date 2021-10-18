@@ -25,4 +25,10 @@ int main(int argc, char **argv)
 		printf("Program file loaded successfully\n");
 	}
 
+	// Declare the CHIP8 Interpreter skeleton
+	m_chip8 chip8;
+
+	// Clear registers
+	memset(&chip8.m_registers, 0, sizeof(chip8.m_registers));
+
 }

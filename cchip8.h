@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <string.h>
 
 // Default CHIP8 font
 static const unsigned char m_font[80] = {
