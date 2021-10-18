@@ -98,5 +98,9 @@ int main(int argc, char **argv)
 #endif
 	}
 
+	// Free the buffer
+	free(m_prg_buf);
 
+	// Close the file pipe
+	fclose(m_prg);
 }
