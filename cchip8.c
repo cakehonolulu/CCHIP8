@@ -156,11 +156,14 @@ void m_exec(m_chip8 *chip8)
 	uint16_t m_opcode = m_fetch(chip8);
 	chip8->m_currentopcode = m_opcode;
 
+#ifdef DEBUG
+	printf("opcode: 0x%x\n", m_opcode);
+#endif
+
     switch(m_opcode & 0xF000)
     {
     	case ANNN: // [ANN] I = NNN (Sets I to the address NNN.)
 #ifdef DEBUG
-    		printf("opcode: 0x%x\n", m_opcode);
     		printf("A%x -> ANNN Instr. where NNN = addr. 0x%x\n", 
     			chip8->m_currentopcode & 0x0FFF, chip8->m_currentopcode & 0x0FFF);
 #endif
