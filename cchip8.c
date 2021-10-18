@@ -130,16 +130,52 @@ int main(int argc, char **argv)
 
 	chip8.m_isUnimplemented = false;
 
-	while (true)
+	// Declare both the window and Surface to use SDL2 abilities
+	SDL_Window   *m_window;
+	SDL_Surface  *m_framebuffer;
+
+	// Init SDL2
+	SDL_Init(SDL_INIT_VIDEO);
+
+	// Create a 500 x 500 (px) window
+	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, 0);
+
+	// Set screen as a pointer to the window's surface
+	m_framebuffer = SDL_GetWindowSurface(m_window);
+
+	// Set the background colour as black (RGB: 0, 0, 0)
+	uint32_t m_bgcolour = SDL_MapRGB(m_framebuffer->format, 0, 0, 0);
+
+	// Fill the entire surface with black pixels
+	SDL_FillRect(m_framebuffer, NULL, m_bgcolour);
+
+	// Create an SDL2 event
+	SDL_Event event;
+
+	// Update the framebuffer with all the changes
+	SDL_UpdateWindowSurface(m_window);
+
+	// Instead of using a while (true), use SDL_PollEvent, it'll help us with keyboard inputs
+	while (SDL_PollEvent(&event))
 	{
+		/*
+			Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
+			clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
+		*/
 		if (chip8.m_isUnimplemented == true)
 		{
 			printf("Exiting the main loop...\n");
+			SDL_FreeSurface(m_framebuffer);
+			SDL_DestroyWindow(m_window);
+			SDL_Quit();
 			return FAIL;
 		} else {
-			// Execute the instruction
+			// Execute the fetch & decode
 			m_exec(&chip8);
 		}
+
+		// Let the CPU sleep
+		SDL_Delay(16);
 	}
 }
 

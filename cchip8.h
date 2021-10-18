@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <SDL2/SDL.h>
+
 #define CHIP8_FONT_SIZE 80
 
 // Default CHIP8 font
