@@ -25,6 +25,7 @@ int main(int argc, char **argv)
 	if(m_prg == NULL)
 	{
 		printf("Could not open the program file, exiting...\n");
+		return FAIL;
 	} else {
 		printf("Program file loaded successfully\n");
 	}
