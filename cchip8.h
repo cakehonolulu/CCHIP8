@@ -68,4 +68,7 @@ typedef struct chip8
 
 	// Bool that stores the machine state
 	bool m_isRunning;
+
+	// Bool that checks if we've found an unimplemented opcode
+	bool m_isUnimplemented;
 } m_chip8;

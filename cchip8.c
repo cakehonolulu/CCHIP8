@@ -128,17 +128,47 @@ int main(int argc, char **argv)
 #endif
 	}
 
+	chip8.m_isUnimplemented = false;
+
 	while (true)
 	{
-		// Execute the instruction
-		m_exec(&chip8);
+		if (chip8.m_isUnimplemented == true)
+		{
+			printf("Exiting the main loop...\n");
+			return FAIL;
+		} else {
+			// Execute the instruction
+			m_exec(&chip8);
 		
-		// Increment the program counter register
-		chip8.m_programcounter += 2;
+			// Increment the program counter register
+			chip8.m_programcounter += 2;
+		}
 	}
+}
+
+unsigned char m_fetch(m_chip8 *chip8)
+{
+	unsigned char m_opcode;
+
+	unsigned char m_opcode_hi = chip8->m_memory[chip8->m_programcounter];
+
+	unsigned char m_opcode_lo = chip8->m_memory[chip8->m_programcounter + 1];
+
+    m_opcode = m_opcode_hi << 8 | m_opcode_lo;
+
+    return m_opcode;
 }
 
 void m_exec(m_chip8 *chip8)
 {
+	unsigned char m_opcode = m_fetch(chip8);
 
+    switch(m_opcode & 0xF000)
+    {
+
+    	default:
+    		printf("Uninmplemented opcode 0x%x\n", m_opcode);
+    		chip8->m_isUnimplemented = true;
+    		return FAIL;
+    }
 }
