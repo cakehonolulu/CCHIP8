@@ -6,7 +6,6 @@
 
 #define CHIP8_FONT_SIZE 80
 
-#define ANNN 0xA000
 // Default CHIP8 font
 static const unsigned char m_font[CHIP8_FONT_SIZE] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
