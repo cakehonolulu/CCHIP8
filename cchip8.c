@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	chip8.m_index = 0;
 
 	// Set the program counter to 0x200
-	chip8.m_programcounter = (unsigned char) CHIP8_INITIAL_PC;
+	chip8.m_programcounter = CHIP8_INITIAL_PC;
 
 	// Initialize the stack
 	memset(&chip8.m_stack, 0, sizeof(chip8.m_stack));
@@ -82,7 +82,6 @@ int main(int argc, char **argv)
 	// Load the file into host memory
 	fread(m_prg_buf, sizeof(unsigned char), m_prgsz, m_prg); 
 
-
 #ifdef DEBUG
 	printf("Program size: %d bytes\n", (unsigned int) m_prgsz);
 	printf("Program Memory Dump: \n");
@@ -91,7 +90,7 @@ int main(int argc, char **argv)
 	// Load the program from host memory into interpreter's memory
 	for (unsigned int i = 0; i < (unsigned int) m_prgsz; i++)
 	{
-		chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
+		chip8.m_memory[(unsigned int) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
 
 #ifdef DEBUG
 		printf("0x%x ", (unsigned int) chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i]);
@@ -114,6 +113,7 @@ int main(int argc, char **argv)
 	printf("Loading the font into memory...\n");
 	printf("Font Memory Map: \n");
 #endif
+
 	for (unsigned int i = 0; i < CHIP8_FONT_SIZE; i++)
 	{
 		chip8.m_memory[i] = m_font[i];
@@ -146,26 +146,23 @@ int main(int argc, char **argv)
 	}
 }
 
-unsigned char m_fetch(m_chip8 *chip8)
+uint16_t m_fetch(m_chip8 *chip8)
 {
-	unsigned char m_opcode;
-
-	unsigned char m_opcode_hi = chip8->m_memory[chip8->m_programcounter];
-
-	unsigned char m_opcode_lo = chip8->m_memory[chip8->m_programcounter + 1];
-
-    m_opcode = m_opcode_hi << 8 | m_opcode_lo;
+	uint16_t m_opcode = (chip8->m_memory[chip8->m_programcounter]) << 8
+    			| (chip8->m_memory[chip8->m_programcounter + 1]);
 
     return m_opcode;
 }
 
 void m_exec(m_chip8 *chip8)
 {
-	unsigned char m_opcode = m_fetch(chip8);
+	uint16_t m_opcode = m_fetch(chip8);
 
     switch(m_opcode & 0xF000)
     {
-
+    	case 0xa000: // ANNN
+    		printf("Hi!\n");
+    		break;
     	default:
     		printf("Uninmplemented opcode 0x%x\n", m_opcode);
     		chip8->m_isUnimplemented = true;
