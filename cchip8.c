@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	chip8.m_index = 0;
 
 	// Set the program counter to 0x200
-	chip8.m_programcounter = CHIP8_INITIAL_PC;
+	chip8.m_programcounter = (unsigned char) CHIP8_INITIAL_PC;
 
 	// Initialize the stack
 	memset(&chip8.m_stack, 0, sizeof(chip8.m_stack));
@@ -61,6 +61,6 @@ int main(int argc, char **argv)
 	chip8.m_delaytmr = 0;
 
 	printf("Initialized the emulated interpreter succesfully\n");
-	
+
 
 }
