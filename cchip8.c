@@ -60,7 +60,16 @@ int main(int argc, char **argv)
 	chip8.m_soundtmr = 0;
 	chip8.m_delaytmr = 0;
 
+#ifdef DEBUG
 	printf("Initialized the emulated interpreter succesfully\n");
+#endif
 
+	// Get file size in bytes
+	fseek(m_prg, 0, SEEK_END);
+	size_t m_prgsz = ftell(m_prg);
+	fseek(m_prg, 0, SEEK_SET);
 
+#ifdef DEBUG
+	printf("Program size: %d bytes\n", (unsigned int) m_prgsz);
+#endif
 }
