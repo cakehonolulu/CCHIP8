@@ -95,6 +95,11 @@ int main(int argc, char **argv)
 
 #ifdef DEBUG
 		printf("%x", (unsigned int) chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i]);
+		
+		if (i == (((unsigned int) m_prgsz) - 1))
+		{
+			printf("\n");
+		}
 #endif
 	}
 
@@ -103,4 +108,9 @@ int main(int argc, char **argv)
 
 	// Close the file pipe
 	fclose(m_prg);
+
+	for (unsigned int i = 0; i < CHIP8_FONT_SIZE; i++)
+	{
+		chip8.m_memory[i] = m_font[i];
+	}
 }

@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define CHIP8_FONT_SIZE 80
+
 // Default CHIP8 font
-static const unsigned char m_font[80] = {
+static const unsigned char m_font[CHIP8_FONT_SIZE] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
 	0x20, 0x60, 0x20, 0x20, 0x70, // 1
 	0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
