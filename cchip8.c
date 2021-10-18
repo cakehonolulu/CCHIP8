@@ -60,4 +60,7 @@ int main(int argc, char **argv)
 	chip8.m_soundtmr = 0;
 	chip8.m_delaytmr = 0;
 
+	printf("Initialized the emulated interpreter succesfully\n");
+	
+
 }
