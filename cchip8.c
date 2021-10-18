@@ -156,7 +156,7 @@ int main(int argc, char **argv)
 	SDL_UpdateWindowSurface(m_window);
 
 	// Instead of using a while (true), use SDL_PollEvent, it'll help us with keyboard inputs
-	while (SDL_PollEvent(&event))
+	while (true)//SDL_PollEvent(&event))
 	{
 		/*
 			Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
