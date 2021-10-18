@@ -47,4 +47,7 @@ int main(int argc, char **argv)
 	// Initialize the stack
 	memset(&chip8.m_stack, 0, sizeof(chip8.m_stack));
 
+	// Initialize the memory
+	memset(&chip8.m_memory, 0, sizeof(chip8.m_memory));
+
 }
