@@ -109,6 +109,7 @@ int main(int argc, char **argv)
 	// Close the file pipe
 	fclose(m_prg);
 
+	// Now load the font into the interpreter's memory
 #ifdef DEBUG
 	printf("Loading the font into memory...\n");
 	printf("Font Memory Map: \n");
