@@ -50,4 +50,7 @@ int main(int argc, char **argv)
 	// Initialize the memory
 	memset(&chip8.m_memory, 0, sizeof(chip8.m_memory));
 
+	// Initialize the keyboard data
+	memset(&chip8.m_keyboard, 0, sizeof(chip8.m_keyboard));
+
 }
