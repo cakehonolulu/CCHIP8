@@ -65,4 +65,7 @@ typedef struct chip8
 	// This bool will be checked against in the main emulator loop
 	// in order to decide wether to draw or not the screen
 	bool m_redraw;
+
+	// Bool that stores the machine state
+	bool m_isRunning;
 } m_chip8;

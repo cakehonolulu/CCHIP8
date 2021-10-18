@@ -127,4 +127,18 @@ int main(int argc, char **argv)
 		}
 #endif
 	}
+
+	while (true)
+	{
+		// Execute the instruction
+		m_exec(&chip8);
+		
+		// Increment the program counter register
+		chip8.m_programcounter += 2;
+	}
+}
+
+void m_exec(m_chip8 *chip8)
+{
+
 }
