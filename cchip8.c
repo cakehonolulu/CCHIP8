@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 		return FAIL;
 	}
 
-	// Load the file into memory
+	// Load the file into host memory
 	fread(m_prg_buf, sizeof(unsigned char), m_prgsz, m_prg); 
 
 
@@ -88,6 +88,7 @@ int main(int argc, char **argv)
 	printf("Memory dump: \n");
 #endif
 
+	// Load the program from host memory into interpreter's memory
 	for (unsigned int i = 0; i < (unsigned int) m_prgsz; i++)
 	{
 		chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
