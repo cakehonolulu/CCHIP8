@@ -6,6 +6,7 @@
 
 #define CHIP8_FONT_SIZE 80
 
+#define ANNN 0xA000
 // Default CHIP8 font
 static const unsigned char m_font[CHIP8_FONT_SIZE] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -73,6 +74,9 @@ typedef struct chip8
 
 	// Bool that checks if we've found an unimplemented opcode
 	bool m_isUnimplemented;
+
+	// Store current opcode
+	uint16_t m_currentopcode;
 } m_chip8;
 
 void m_exec(m_chip8 *chip8);
