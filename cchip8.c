@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "cchip8.h"
 
 #define OK 0
@@ -69,7 +68,31 @@ int main(int argc, char **argv)
 	size_t m_prgsz = ftell(m_prg);
 	fseek(m_prg, 0, SEEK_SET);
 
+	unsigned char *m_prg_buf;
+
+	m_prg_buf = (unsigned char*) malloc(sizeof(unsigned char) * m_prgsz);
+
+	if (m_prg_buf == NULL)
+	{
+		printf("Couldn't allocate memory, exiting...\n");
+		return FAIL;
+	}
+
+	// TODO: handle error if not read into memory?
+	fread(m_prg_buf, sizeof(unsigned char), m_prgsz, m_prg); 
+
+
 #ifdef DEBUG
 	printf("Program size: %d bytes\n", (unsigned int) m_prgsz);
+	printf("Memory dump: \n");
 #endif
+
+	for (unsigned int i = 0; i < (unsigned int) m_prgsz; i++)
+	{
+		chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
+
+#ifdef DEBUG
+		printf("%x", (unsigned int) chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i]);
+#endif
+	}
 }
