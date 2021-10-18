@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 		chip8.m_memory[(unsigned int) CHIP8_INITIAL_PC + i] = m_prg_buf[i];
 
 #ifdef DEBUG
-		printf("0x%x ", (unsigned int) chip8.m_memory[(unsigned char) CHIP8_INITIAL_PC + i]);
+		printf("0x%x ", (unsigned int) chip8.m_memory[CHIP8_INITIAL_PC + i]);
 
 		if (i == (((unsigned int) m_prgsz) - 1))
 		{
@@ -170,6 +170,7 @@ void m_exec(m_chip8 *chip8)
     		chip8->m_index = chip8->m_currentopcode & 0x0FFF;
     		chip8->m_programcounter += 2;
     		break;
+
     	default:
     		printf("Uninmplemented opcode 0x%x\n", m_opcode);
     		chip8->m_isUnimplemented = true;
