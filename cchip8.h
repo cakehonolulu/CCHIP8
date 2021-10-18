@@ -72,3 +72,5 @@ typedef struct chip8
 	// Bool that checks if we've found an unimplemented opcode
 	bool m_isUnimplemented;
 } m_chip8;
+
+void m_exec(m_chip8 *chip8);

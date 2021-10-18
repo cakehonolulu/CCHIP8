@@ -169,6 +169,6 @@ void m_exec(m_chip8 *chip8)
     	default:
     		printf("Uninmplemented opcode 0x%x\n", m_opcode);
     		chip8->m_isUnimplemented = true;
-    		return FAIL;
+    		return;
     }
 }
