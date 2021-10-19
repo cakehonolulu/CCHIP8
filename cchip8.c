@@ -189,95 +189,48 @@ int main(int argc, char **argv)
 	// Update the framebuffer with all the changes
 	SDL_UpdateWindowSurface(m_window);
 
-	/*if (m == true)
+	// If Debug Mode is enabled, instead of jumping into the regular emulation, open the debugger instead
+	if (m_dbgmode == true)
 	{
+		printf("Entered Debug Mode!\n");
 
-	}*/
-
-	// Instead of using a while (true), use SDL_PollEvent, it'll help us with keyboard inputs
-	while (true)//SDL_PollEvent(&event))
-	{
-		/*
-			Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
-			clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
-		*/
-		if (chip8.m_isUnimplemented == true)
+		while (SDL_PollEvent(&event))
 		{
-			printf("Exiting the main loop...\n");
-			SDL_FreeSurface(m_framebuffer);
-			SDL_DestroyWindow(m_window);
-			SDL_Quit();
-			return FAIL;
-		} else {
-			// Execute the fetch & decode
-			m_exec(&chip8);
+			switch (event.type)
+			{
+				case SDL_QUIT:
+					SDL_FreeSurface(m_framebuffer);
+					SDL_DestroyWindow(m_window);
+					SDL_Quit();
+					break;
+
+				default:
+					break;
+			}
 		}
 
-		// Let the CPU sleep
-		SDL_Delay(16);
-	}
-}
+	} else {
+		// Instead of using a while (true), use SDL_PollEvent, it'll help us with keyboard inputs
+		while (true)//SDL_PollEvent(&event))
+		{
+			/*
+				Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
+				clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
+			*/
+			if (chip8.m_isUnimplemented == true)
+			{
+				printf("Exiting the main loop...\n");
+				SDL_FreeSurface(m_framebuffer);
+				SDL_DestroyWindow(m_window);
+				SDL_Quit();
+				return FAIL;
+			} else {
+				// Execute the fetch & decode
+				m_exec(&chip8);
+			}
 
-uint16_t m_fetch(m_chip8 *chip8)
-{
-	uint16_t m_opcode = (chip8->m_memory[chip8->m_programcounter]) << 8
-				| (chip8->m_memory[chip8->m_programcounter + 1]);
-
-	return m_opcode;
-}
-
-void m_exec(m_chip8 *chip8)
-{
-	uint16_t m_opcode = m_fetch(chip8);
-	chip8->m_currentopcode = m_opcode;
-
-#ifdef DEBUG
-	printf("opcode: 0x%x\n", m_opcode);
-#endif
-
-	switch(m_opcode & 0xF000)
-	{
-		case 0x2000: // [2NNN] Cals subroutine at NNN
-#ifdef DEBUG
-			printf("2NNN (%x) [NNN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0FFF);
-			printf("2NNN -> PC: 0x%x\n", chip8->m_programcounter);
-#endif
-			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
-
-#ifdef DEBUG
-			printf("2NNN Jumped to: 0x%x\n", chip8->m_programcounter);
-#endif
-			break;
-
-		case 0x6000: // [6XNN] Sets Vx to NN
-#ifdef DEBUG
-			printf("6XNN (%x) [NN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x00FF);
-#endif
-			chip8->m_registers[((chip8->m_currentopcode & 0x0F00) >> 8)] =
-				chip8->m_currentopcode & 0x00FF;
-			chip8->m_programcounter += 2;
-			break;
-
-		case 0xA000: // [ANNN] Sets I to the address NNN
-#ifdef DEBUG
-			printf("ANNN (%x) [NNN -> 0x%x]\n", 
-				chip8->m_currentopcode & 0x0FFF, chip8->m_currentopcode & 0x0FFF);
-#endif
-			chip8->m_index = chip8->m_currentopcode & 0x0FFF;
-			chip8->m_programcounter += 2;
-			break;
-
-		case 0xD000:
-#ifdef DEBUG
-			printf("Sprite draw placeholder\n");
-#endif
-
-			chip8->m_programcounter += 2;
-			break;
-
-		default:
-			printf("Uninmplemented opcode 0x%x\n", m_opcode);
-			chip8->m_isUnimplemented = true;
-			return;
+			// Let the CPU sleep
+			SDL_Delay(16);
+		}
 	}
 }
