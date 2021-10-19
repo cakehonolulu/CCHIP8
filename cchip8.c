@@ -12,7 +12,9 @@ int main(int argc, char **argv)
 	// Check for commandline arguments
 	if (argc < 2)
 	{
-		printf("Usage: ./cchip8 [progname]\n");
+		printf("Usage: ./cchip8 [flags] [progname]\n");
+		printf("Command-line switches:\n");
+		printf("-[d or D] Enable the built-in debugger\n");
 		return FAIL;
 	}
 
