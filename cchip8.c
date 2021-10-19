@@ -228,7 +228,7 @@ void m_exec(m_chip8 *chip8)
     		chip8->m_programcounter += 2;
     		break;
 
-    		case 0xD000:
+		case 0xD000:
 #ifdef DEBUG
     		printf("Sprite draw placeholder\n");
 #endif
