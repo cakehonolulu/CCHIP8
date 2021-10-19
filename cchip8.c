@@ -16,11 +16,43 @@ int main(int argc, char **argv)
 		return FAIL;
 	}
 
+	// Implement a debug mode program flag (Enabled through command line arguments)
+	bool m_dbgmode = false;
+
+	// Use a char array to store the program name for later use
+	uint8_t *m_filename = NULL;
+
+	size_t i;
+
+	// Simple for loop that checks for command-line switches and stores the program name from argv to *m_filename
+    for (i = 1; i < argc; i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			if (argv[i][1] == 'd' || argv[i][1] == 'D')
+			{
+				// If "-d" or "-D" switches are found, enable debugger mode 
+				m_dbgmode = true;
+				printf("Debugger enabled!\n");
+			} else {
+				// If the switch doesn't exist, warn the user and exit
+				printf("Invalid switch!\n");
+				return FAIL;
+			}
+		} else {
+			// Store the filename into m_filename
+			m_filename = argv[i];
+
+			// Print the filename
+			printf("Loading %s...\n", m_filename);
+		}
+	}
+
 	// Use the FILE directive to access a file
 	FILE *m_prg;
 
 	// Open the file in binary mode (And read-only)
-	m_prg = fopen(argv[1], "rb");
+	m_prg = fopen(m_filename, "rb");
 
 	// Check if the file has been opened
 	if(m_prg == NULL)
@@ -154,6 +186,11 @@ int main(int argc, char **argv)
 
 	// Update the framebuffer with all the changes
 	SDL_UpdateWindowSurface(m_window);
+
+	/*if (m == true)
+	{
+
+	}*/
 
 	// Instead of using a while (true), use SDL_PollEvent, it'll help us with keyboard inputs
 	while (true)//SDL_PollEvent(&event))
