@@ -211,7 +211,52 @@ int main(int argc, char **argv)
 						SDL_Quit();
 						exit(9);
 						break;
+					case SDL_KEYDOWN:
+						m_exec(&chip8);
+						
+						/*
+							Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
+							clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
+						*/
+						if (chip8.m_isUnimplemented == true)
+						{
+							printf("Exiting the main loop...\n");
+							SDL_DestroyWindow(m_window);
+							SDL_Quit();
+							return FAIL;
 
+						if (chip8.m_redraw) {
+							chip8.m_redraw = false;
+					
+							for (int i = 0; i < 2048; ++i) {
+								uint8_t pixel = chip8.m_display[i];
+								chip8.m_pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
+							}
+			
+							//Update texture
+							SDL_UpdateTexture(m_texture, NULL, chip8.m_pixels, 64 * sizeof(uint32_t));
+							//Clear and present renderer
+							SDL_RenderClear(m_renderer);
+							SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+							SDL_RenderPresent(m_renderer);
+						}
+
+						// Update timers
+						if (chip8.m_delaytmr > 0)
+						{
+							chip8.m_delaytmr--;
+						}
+
+						if (chip8.m_soundtmr > 0)
+						{
+							if(chip8.m_soundtmr == 1)
+							{
+								// Sound playing routine
+							}
+						chip8.m_soundtmr--;
+					}
+						break;
+						
 					default:
 						break;
 				}
@@ -248,27 +293,9 @@ int main(int argc, char **argv)
 				} else {
 					// Execute the fetch & decode
 					m_exec(&chip8);
-
-					// Update timers
-					if (chip8.m_delaytmr > 0)
-					{
-						--chip8.m_delaytmr;
-					}
-					
-
-					if (chip8.m_soundtmr > 0)
-					{
-						if(chip8.m_soundtmr == 1)
-						{
-							// Sound playing routine
-						}
-
-						--chip8.m_soundtmr;
-					}
 				}
 
 				if (chip8.m_redraw) {
-					printf("Drawing...\n");
 					chip8.m_redraw = false;
 					
 					for (int i = 0; i < 2048; ++i) {
@@ -283,6 +310,22 @@ int main(int argc, char **argv)
 					SDL_RenderClear(m_renderer);
 					SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
 					SDL_RenderPresent(m_renderer);
+				}
+
+				// Update timers
+				if (chip8.m_delaytmr > 0)
+				{
+					chip8.m_delaytmr--;
+				}
+
+				if (chip8.m_soundtmr > 0)
+				{
+					if(chip8.m_soundtmr == 1)
+					{
+						// Sound playing routine
+					}
+
+					chip8.m_soundtmr--;
 				}
 
 				// Let the CPU sleep
