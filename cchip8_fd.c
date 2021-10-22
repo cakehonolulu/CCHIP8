@@ -54,6 +54,17 @@ void m_exec(m_chip8 *chip8)
 #endif
 			break;
 
+		/*
+			3XNN:
+			Skips the next instruction if VX equals NN. (Usually the next instruction is a jump to skip a code block);
+		*/
+		case 0x3000:
+			if (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] == (chip8->m_currentopcode & 0x00FF))
+                chip8->m_programcounter += 4;
+            else
+                chip8->m_programcounter += 2;
+            break;
+
 		case 0x6000: // [6XNN] Sets Vx to NN
 #ifdef DEBUG
 			printf("6XNN (%x) [NN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x00FF);
@@ -114,6 +125,25 @@ void m_exec(m_chip8 *chip8)
 		case 0xF000:
 			switch (m_opcode & 0x00FF)
 			{
+
+				/*
+					FX07 (Inverse of FX15):
+					Sets VX to the value of the delay timer.
+				*/
+				case 0x0007:
+					chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] = chip8->m_delaytmr;
+                    chip8->m_programcounter += 2;
+					break;
+
+				/*
+					FX15 (Inverse of FX07):
+					Sets the delay timer to VX.
+				*/
+				case 0x0015:
+					chip8->m_delaytmr = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
+                    chip8->m_programcounter += 2;
+                    break;
+
 				/*
 					FX29:
 					Sets I to the location of the sprite for the character in VX.
