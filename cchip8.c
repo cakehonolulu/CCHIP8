@@ -200,6 +200,7 @@ int main(int argc, char **argv)
 
 		while (true)
 		{
+			// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
 			while (SDL_PollEvent(&event))
 			{
 				switch (event.type)
@@ -216,9 +217,9 @@ int main(int argc, char **argv)
 			}
 		}
 	} else {
-		// Instead of using a while (true), use SDL_PollEvent, it'll help us with keyboard inputs
-		while (true)//SDL_PollEvent(&event))
+		while (true)
 		{
+			// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
 			while (SDL_PollEvent(&event))
 			{
 				switch (event.type)
