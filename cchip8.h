@@ -65,6 +65,9 @@ typedef struct chip8
 	// to address the totality of the video buffer
 	uint8_t m_display[64 * 32];
 
+	// Pixel representation for SDL texture
+	uint32_t m_pixels[2048];
+
 	// CHIP8 - Timer Registers
 	uint8_t m_soundtmr;
 	uint8_t m_delaytmr;
