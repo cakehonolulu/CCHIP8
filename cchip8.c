@@ -190,8 +190,6 @@ int main(int argc, char **argv)
 	// Update the framebuffer with all the changes
 	SDL_UpdateWindowSurface(m_window);
 
-	memset(chip8.m_pixels, 0, sizeof(chip8.m_pixels));
-
 	// If Debug Mode is enabled, instead of jumping into the regular emulation, open the debugger instead
 	if (m_dbgmode == true)
 	{
@@ -253,12 +251,12 @@ int main(int argc, char **argv)
 					
 					for (int i = 0; i < 2048; ++i) {
 						uint8_t pixel = chip8.m_display[i];
-						chip8.m_pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
+						chip8.m_display[i] = (0x00FFFFFF * pixel) | 0xFF000000;
 
 					}
 			
 					//Update texture
-					SDL_UpdateTexture(m_texture, NULL, chip8.m_pixels, 64 * sizeof(uint32_t));
+					SDL_UpdateTexture(m_texture, NULL, chip8.m_display[i], 64 * sizeof(uint32_t));
 					//Clear and present renderer
 					SDL_RenderClear(m_renderer);
 					SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
