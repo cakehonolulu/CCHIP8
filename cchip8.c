@@ -22,12 +22,10 @@ int main(int argc, char **argv)
 	bool m_dbgmode = false;
 
 	// Use a char array to store the program name for later use
-	uint8_t *m_filename = NULL;
-
-	size_t i;
+	const char *m_filename;
 
 	// Simple for loop that checks for command-line switches and stores the program name from argv to *m_filename
-	for (i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i++)
 	{
 		if (argv[i][0] == '-')
 		{
