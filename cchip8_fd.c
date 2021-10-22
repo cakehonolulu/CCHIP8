@@ -85,6 +85,15 @@ void m_exec(m_chip8 *chip8)
 			switch (m_opcode & 0x00FF)
 			{
 				/*
+					FX29:
+					Sets I to the location of the sprite for the character in VX.
+					Characters 0-F (in hexadecimal) are represented by a 4x5 font.
+				*/
+				case 0x0029:
+    					chip8->m_index = (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] * 0x5);
+    					chip8->m_programcounter += 2;
+    					break;
+				/*
 					FX33:
 					Stores the binary-coded decimal representation of VX, with the most significant
 					of three digits at the address in I, the middle digit at I plus 1, and the
