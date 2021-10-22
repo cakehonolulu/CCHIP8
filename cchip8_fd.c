@@ -21,6 +21,17 @@ void m_exec(m_chip8 *chip8)
 
 	switch(m_opcode & 0xF000)
 	{
+		case 0x0000:
+			switch (m_opcode & 0x00FF)
+			{
+				case 0x00EE:
+					chip8->m_stackp--;
+					chip8->m_programcounter = chip8->m_stack[chip8->m_stackp];
+					chip8->m_programcounter += 2;
+					break;
+			}
+			break;
+
 		case 0x2000: // [2NNN] Cals subroutine at NNN
 #ifdef DEBUG
 			printf("2NNN (%x) [NNN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0FFF);
@@ -39,6 +50,15 @@ void m_exec(m_chip8 *chip8)
 #endif
 			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] =
 				chip8->m_currentopcode & 0x00FF;
+			chip8->m_programcounter += 2;
+			break;
+
+		/*
+			7XNN:
+			Adds NN to VX. (Carry flag is not changed);
+		*/
+		case 0x7000:
+			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] += chip8->m_currentopcode & 0x00FF;
 			chip8->m_programcounter += 2;
 			break;
 
