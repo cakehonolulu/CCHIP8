@@ -248,6 +248,23 @@ int main(int argc, char **argv)
 				} else {
 					// Execute the fetch & decode
 					m_exec(&chip8);
+
+					// Update timers
+					if (chip8.m_delaytmr > 0)
+					{
+						--chip8.m_delaytmr;
+					}
+					
+
+					if (chip8.m_soundtmr > 0)
+					{
+						if(chip8.m_soundtmr == 1)
+						{
+							// Sound playing routine
+						}
+
+						--chip8.m_soundtmr;
+					}
 				}
 
 				if (chip8.m_redraw) {
