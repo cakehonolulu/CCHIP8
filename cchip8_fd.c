@@ -33,6 +33,18 @@ void m_exec(m_chip8 *chip8)
 			}
 			break;
 
+		/*
+			1NNN:
+			Jumps to address NNN.
+		*/
+		case 0x1000:
+			/*
+				Do the same as 2NNN but don't touch the stack, as this is a jump, not a subroutine call where
+				we need to push the return address to the stack
+			*/
+			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
+			break;
+
 		case 0x2000: // [2NNN] Cals subroutine at NNN
 #ifdef DEBUG
 			printf("2NNN (%x) [NNN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0FFF);
@@ -92,6 +104,15 @@ void m_exec(m_chip8 *chip8)
 			chip8->m_programcounter += 2;
 			break;
 
+		/*
+			CXNN:
+			Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
+		*/
+		case 0xC000:
+			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] = (rand() % (0xFF + 1)) & (chip8->m_currentopcode & 0x00FF);
+            chip8->m_programcounter += 2;
+            break;
+
 		case 0xD000:
 #ifdef DEBUG
 			printf("Sprite draw placeholder\n");
@@ -120,6 +141,18 @@ void m_exec(m_chip8 *chip8)
 
     		chip8->m_redraw = true;
 			chip8->m_programcounter += 2;
+			break;
+
+		case 0xE000:
+			switch (m_opcode & 0x00FF)
+			{
+				case 0x00A1:
+					if (chip8->m_keyboard[chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)]] == 0)
+                        chip8->m_programcounter +=  4;
+                    else
+                        chip8->m_programcounter += 2;
+                    break;
+			}
 			break;
 
 		case 0xF000:
