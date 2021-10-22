@@ -55,7 +55,30 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Sprite draw placeholder\n");
 #endif
+			uint8_t target_v_reg_x = (chip8->m_currentopcode & 0x0F00) >> 8;
+    		uint8_t target_v_reg_y = (chip8->m_currentopcode & 0x00F0) >> 4;
+    		uint8_t sprite_height = chip8->m_currentopcode & 0x000F;
+    		uint8_t x_location = chip8->m_registers[target_v_reg_x];
+    		uint8_t y_location = chip8->m_registers[target_v_reg_y];
+    		uint8_t pixel;
 
+    		// Reset collision register to FALSE
+    		chip8->m_registers[0xF] = 0;
+    		for (int y_coordinate = 0; y_coordinate < sprite_height; y_coordinate++) {
+        		pixel = chip8->m_memory[chip8->m_index + y_coordinate];
+        		
+        		for (int x_coordinate = 0; x_coordinate < 8; x_coordinate++) {
+            		if ((pixel & (0x80 >> x_coordinate)) != 0) {
+                		if (chip8->m_display[y_location + y_coordinate][x_location + x_coordinate] == 1) {
+                    		chip8->m_registers[0xF] = 1;
+                		}
+                	
+                	chip8->m_display[y_location + y_coordinate][x_location + x_coordinate] ^= 1;
+            		}
+        		}
+    		}
+
+    		chip8->m_redraw = true;
 			chip8->m_programcounter += 2;
 			break;
 

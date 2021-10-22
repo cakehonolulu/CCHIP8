@@ -173,13 +173,13 @@ int main(int argc, char **argv)
 	SDL_Init(SDL_INIT_VIDEO);
 
 	// Create a 500 x 500 (px) window
-	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, 0);
+	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 650, 420, 0);
 
 	// Set screen as a pointer to the window's surface
-	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
 
 	// Adjust the renderer size
-	SDL_RenderSetLogicalSize(m_renderer, CHIP8_COLUMNS, CHIP8_ROWS);
+	SDL_RenderSetLogicalSize(m_renderer, 1024, 512);
 	
 	// Setup the texture trick that'll enable us to display emulator output
 	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, CHIP8_COLUMNS, CHIP8_ROWS);
@@ -189,6 +189,8 @@ int main(int argc, char **argv)
 
 	// Update the framebuffer with all the changes
 	SDL_UpdateWindowSurface(m_window);
+
+	memset(chip8.m_pixels, 0, sizeof(chip8.m_pixels));
 
 	// If Debug Mode is enabled, instead of jumping into the regular emulation, open the debugger instead
 	if (m_dbgmode == true)
@@ -243,6 +245,24 @@ int main(int argc, char **argv)
 				} else {
 					// Execute the fetch & decode
 					m_exec(&chip8);
+				}
+
+				if (chip8.m_redraw) {
+					printf("Drawing...\n");
+					chip8.m_redraw = false;
+					
+					for (int i = 0; i < 2048; ++i) {
+						uint8_t pixel = chip8.m_display[i];
+						chip8.m_pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
+
+					}
+			
+					//Update texture
+					SDL_UpdateTexture(m_texture, NULL, chip8.m_pixels, 64 * sizeof(uint32_t));
+					//Clear and present renderer
+					SDL_RenderClear(m_renderer);
+					SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+					SDL_RenderPresent(m_renderer);
 				}
 
 				// Let the CPU sleep
