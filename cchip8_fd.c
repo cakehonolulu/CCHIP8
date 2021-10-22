@@ -25,6 +25,7 @@ void m_exec(m_chip8 *chip8)
 			switch (m_opcode & 0x00FF)
 			{
 				case 0x00EE:
+					// TODO: Stack push-pop function to simplify the code
 					chip8->m_stackp--;
 					chip8->m_programcounter = chip8->m_stack[chip8->m_stackp];
 					chip8->m_programcounter += 2;
@@ -37,6 +38,15 @@ void m_exec(m_chip8 *chip8)
 			printf("2NNN (%x) [NNN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0FFF);
 			printf("2NNN -> PC: 0x%x\n", chip8->m_programcounter);
 #endif
+			/*
+				When I first made the 2NNN implementation, I forgot that I had to push the current program counter
+				ddress to the stack and update the stack pointer accordingly
+			*/
+
+			// TODO: Stack push-pop function to simplify the code
+			chip8->m_stack[chip8->m_stackp] = chip8->m_programcounter;
+			chip8->m_stackp++;
+
 			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
 
 #ifdef DEBUG
