@@ -8,6 +8,9 @@
 
 #define CHIP8_FONT_SIZE 80
 
+#define CHIP8_COLUMNS 64
+#define CHIP8_ROWS 30
+
 // Default CHIP8 font
 static const unsigned char m_font[CHIP8_FONT_SIZE] = {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
