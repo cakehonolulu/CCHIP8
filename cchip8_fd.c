@@ -81,6 +81,64 @@ void m_exec(m_chip8 *chip8)
 			chip8->m_programcounter += 2;
 			break;
 
+		case 0xF000:
+			switch (m_opcode & 0x00FF)
+			{
+				/*
+					FX33:
+					Stores the binary-coded decimal representation of VX, with the most significant
+					of three digits at the address in I, the middle digit at I plus 1, and the
+					least significant digit at I plus 2.
+					(In other words, take the decimal representation of VX, place the hundreds digit
+					in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.);
+				*/
+				case 0x0033:
+#ifdef DEBUG
+					printf("FX33 Opcode!\n"); 
+#endif
+    				chip8->m_memory[chip8->m_index] = chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8] / 100;
+#ifdef DEBUG
+					printf("idx (%d)\n", chip8->m_memory[chip8->m_index]); 
+#endif
+    				chip8->m_memory[chip8->m_index + 1] = (chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8] / 10) % 10;
+#ifdef DEBUG
+					printf("idx+1 (%d)\n", chip8->m_memory[chip8->m_index + 1]);
+#endif
+    				chip8->m_memory[chip8->m_index + 2] = (chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8] % 100) % 10;
+#ifdef DEBUG
+					printf("idx+2 (%d)\n", chip8->m_memory[chip8->m_index + 2]);
+#endif
+					chip8->m_programcounter += 2;
+					break;
+				
+				/*
+					FX55:
+					Stores V0 to VX (including VX) in memory starting at address I.
+					The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+				*/
+				case 0x0065:
+#ifdef DEBUG
+					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0F00, (chip8->m_currentopcode & 0x0F00) >> 8);
+#endif
+					// Get F(x)55 value OR-ing 0x0F00 and shifting 8 bits to the left to get the x value from the opcode
+					uint8_t m_x_value = ((chip8->m_currentopcode & 0x0F00) >> 8);
+
+					/* 
+						Use a for() loop to do this task, starting at V0, iterate F(x) times (Calculated above) ending
+						at V(x) register. Each time we enter the for() loop, load in the value at the index register
+						onto the current register pointed by m_currentregister in the loop
+					*/
+					for (size_t m_currentregister = 0; m_currentregister <= m_x_value; m_currentregister++)
+					{
+						chip8->m_registers[m_currentregister] = chip8->m_memory[chip8->m_index + m_currentregister];
+					}
+
+					// Increase the program counter by 2
+					chip8->m_programcounter += 2;
+				}
+
+			break;
+		
 		default:
 			printf("Uninmplemented opcode 0x%x\n", m_opcode);
 			chip8->m_isUnimplemented = true;
