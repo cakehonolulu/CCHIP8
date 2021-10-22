@@ -37,7 +37,7 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("6XNN (%x) [NN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x00FF);
 #endif
-			chip8->m_registers[((chip8->m_currentopcode & 0x0F00) >> 8)] =
+			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] =
 				chip8->m_currentopcode & 0x00FF;
 			chip8->m_programcounter += 2;
 			break;
@@ -55,7 +55,7 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Sprite draw placeholder\n");
 #endif
-			unsigned short x = chip8->m_registers[(chip8->m_index & 0x0F00) >> 8];
+			unsigned short x = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
             unsigned short y = chip8->m_registers[(chip8->m_index & 0x00F0) >> 4];
             unsigned short height = chip8->m_index & 0x000F;
             unsigned short pixel;
@@ -105,15 +105,15 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("FX33 Opcode!\n"); 
 #endif
-    				chip8->m_memory[chip8->m_index] = chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8] / 100;
+    				chip8->m_memory[chip8->m_index] = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] / 100;
 #ifdef DEBUG
 					printf("idx (%d)\n", chip8->m_memory[chip8->m_index]); 
 #endif
-    				chip8->m_memory[chip8->m_index + 1] = (chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8] / 10) % 10;
+    				chip8->m_memory[chip8->m_index + 1] = (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] / 10) % 10;
 #ifdef DEBUG
 					printf("idx+1 (%d)\n", chip8->m_memory[chip8->m_index + 1]);
 #endif
-    				chip8->m_memory[chip8->m_index + 2] = (chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8] % 100) % 10;
+    				chip8->m_memory[chip8->m_index + 2] = (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] % 100) % 10;
 #ifdef DEBUG
 					printf("idx+2 (%d)\n", chip8->m_memory[chip8->m_index + 2]);
 #endif
@@ -127,17 +127,14 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0065:
 #ifdef DEBUG
-					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0F00, (chip8->m_currentopcode & 0x0F00) >> 8);
+					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0F00, M_GET_X_FX(chip8->m_currentopcode));
 #endif
-					// Get F(x)55 value OR-ing 0x0F00 and shifting 8 bits to the left to get the x value from the opcode
-					uint8_t m_x_value = ((chip8->m_currentopcode & 0x0F00) >> 8);
-
 					/* 
 						Use a for() loop to do this task, starting at V0, iterate F(x) times (Calculated above) ending
 						at V(x) register. Each time we enter the for() loop, load in the value at the index register
 						onto the current register pointed by m_currentregister in the loop
 					*/
-					for (size_t m_currentregister = 0; m_currentregister <= m_x_value; m_currentregister++)
+					for (size_t m_currentregister = 0; m_currentregister <= M_GET_X_FX(chip8->m_currentopcode); m_currentregister++)
 					{
 						chip8->m_registers[m_currentregister] = chip8->m_memory[chip8->m_index + m_currentregister];
 					}
