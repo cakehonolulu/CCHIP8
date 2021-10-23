@@ -36,7 +36,7 @@ static const unsigned char m_font[CHIP8_FONT_SIZE] = {
 typedef struct chip8
 {
 	// CHIP8 - Arithmetic Registers
-	uint16_t m_registers[16];
+	uint8_t m_registers[16];
 
 	// CHIP8 - Index Register
 	uint16_t m_index;
@@ -46,7 +46,7 @@ typedef struct chip8
 
 	// CHIP8 - Stack Pointer (SP) Register
 	uint16_t m_stack[16];
-	uint16_t m_stackp;
+	uint8_t m_stackp;
 
 	// CHIP8 - Memory
 	// CHIP8 has a total of 4 KiloBytes (4096 bytes) of
@@ -59,13 +59,13 @@ typedef struct chip8
 	// CHIP8 has 16 total keyboard keys
 	// Declare an array containing 16 entries
 	// to manage keyboard inputs
-	uint8_t m_keyboard[16];
+	int m_keyboard[16];
 
 	// CHIP8 - Output
 	// CHIP8 has a (row:col) 64 by 32 pixel buffer
 	// Declare an array containing (64*32=2048) entries
 	// to address the totality of the video buffer
-	uint8_t m_display[64 * 32];
+	int m_display[64 * 32];
 
 	// Pixel representation for SDL texture
 	uint32_t m_pixels[2048];

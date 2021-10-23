@@ -214,6 +214,16 @@ int main(int argc, char **argv)
 						break;
 					case SDL_KEYDOWN:
 						m_exec(&chip8);
+
+    					printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
+    					for (int i = 0; i < 16; i++) {
+    					    printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
+    					}
+    					printf("Index Reg: 0x%X\n", chip8.m_index);
+    					printf("PC Reg: 0x%X\n", chip8.m_programcounter);
+    					printf("SP Reg: 0x%X\n", chip8.m_stackp);
+    					printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
+    					printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
 						
 						/*
 							Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
@@ -229,17 +239,23 @@ int main(int argc, char **argv)
 						if (chip8.m_redraw) {
 							chip8.m_redraw = false;
 					
-							for (int i = 0; i < 2048; ++i) {
-								uint8_t pixel = chip8.m_display[i];
-								chip8.m_pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
-							}
-			
-							//Update texture
-							SDL_UpdateTexture(m_texture, NULL, chip8.m_pixels, 64 * sizeof(uint32_t));
-							//Clear and present renderer
-							SDL_RenderClear(m_renderer);
-							SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
-							SDL_RenderPresent(m_renderer);
+							uint32_t pixels[32 * 64];
+            				for (int i = 0; i < 32 * 64; i++)
+            				{
+                				if (chip8.m_display[i] == 0)
+                				{
+                    				pixels[i] = 0xFF000000;
+                				}
+                				else
+                				{
+                    				pixels[i] = 0xFFFFFFFF;
+               					}
+            				}
+
+            				SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
+            				SDL_RenderClear(m_renderer);
+            				SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+            				SDL_RenderPresent(m_renderer);
 						}
 
 						// Update timers
