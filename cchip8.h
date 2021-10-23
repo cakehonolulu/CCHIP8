@@ -11,7 +11,7 @@
 #define CHIP8_COLUMNS 64
 #define CHIP8_ROWS 30
 
-#define M_GET_X_FX(x)  ((x & 0x0F00) >> 8)
+#define M_OPC_0X00(x)  ((x & 0x0F00) >> 8)
 
 // Default CHIP8 font
 static const unsigned char m_font[CHIP8_FONT_SIZE] = {

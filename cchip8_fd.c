@@ -82,7 +82,7 @@ void m_exec(m_chip8 *chip8)
 			Skips the next instruction if VX equals NN. (Usually the next instruction is a jump to skip a code block);
 		*/
 		case 0x3000:
-			if (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] == (chip8->m_currentopcode & 0x00FF))
+			if (chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] == (chip8->m_currentopcode & 0x00FF))
                 chip8->m_programcounter += 4;
             else
                 chip8->m_programcounter += 2;
@@ -90,7 +90,7 @@ void m_exec(m_chip8 *chip8)
             break;
 
         case 0x4000:
-			if (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] != (chip8->m_currentopcode & 0x00FF))
+			if (chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] != (chip8->m_currentopcode & 0x00FF))
 				chip8->m_programcounter += 4;
 			else
 				chip8->m_programcounter += 2;
@@ -101,7 +101,7 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("6XNN (%x) [NN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x00FF);
 #endif
-			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] =
+			chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] =
 				chip8->m_currentopcode & 0x00FF;
 			chip8->m_programcounter += 2;
 			break;
@@ -111,7 +111,7 @@ void m_exec(m_chip8 *chip8)
 			Adds NN to VX. (Carry flag is not changed);
 		*/
 		case 0x7000:
-			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] += chip8->m_currentopcode & 0x00FF;
+			chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] += chip8->m_currentopcode & 0x00FF;
 			chip8->m_programcounter += 2;
 			break;
 
@@ -119,17 +119,17 @@ void m_exec(m_chip8 *chip8)
 			switch (m_opcode & 0x000F)
 			{
 				case 0x0000:
-                    chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] = chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
+                    chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] = chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
                     chip8->m_programcounter += 2;
                     break;
 
 				case 0x0002:
-					chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] &= chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
+					chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] &= chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
                     chip8->m_programcounter += 2;
 					break;
 
 				case 0x0004:
-					chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] += chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
+					chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] += chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
                     if(chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4] > (0xFF - chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8]))
                         chip8->m_registers[0xF] = 1;
                     else
@@ -138,22 +138,22 @@ void m_exec(m_chip8 *chip8)
 					break;
 
 				case 0x0005:
-					if(chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4] > chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)])
+					if(chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4] > chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)])
                         chip8->m_registers[0xF] = 0;
                     else
                         chip8->m_registers[0xF] = 1;
 
-                    chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] -= chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
+                    chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] -= chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
                     chip8->m_programcounter += 2;
                     break;
 
 				case 0x0007:
-					if(chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] > chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4])
+					if(chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] > chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4])
                         chip8->m_registers[0xF] = 0;
                     else
                         chip8->m_registers[0xF] = 1;
 
-                    chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] = chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4] - chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
+                    chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] = chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4] - chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)];
                     chip8->m_programcounter += 2;
                     break;
 			}
@@ -174,7 +174,7 @@ void m_exec(m_chip8 *chip8)
 			Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
 		*/
 		case 0xC000:
-			chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] = (rand() % (0xFF + 1)) & (chip8->m_currentopcode & 0x00FF);
+			chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] = (rand() % (0xFF + 1)) & (chip8->m_currentopcode & 0x00FF);
             chip8->m_programcounter += 2;
             break;
 
@@ -182,9 +182,11 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
-			int x = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
-            int y = chip8->m_registers[(chip8->m_index & 0x00F0) >> 4];
-            int ht = chip8->m_index & 0x000F;
+			// X coord is the closest byte to MSB
+			int m_xcoord = chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8];
+
+            int m_ycoord = chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
+            int ht = chip8->m_currentopcode & 0x000F;
             int wt = 8;
             chip8->m_registers[0xF] = 0;
 
@@ -195,7 +197,7 @@ void m_exec(m_chip8 *chip8)
                 {
                     if ((pixel & (0x80 >> j)) != 0)
                     {
-                        int index = ((x + j) + ((y + i) * 64)) % 2048;
+                        int index = ((m_xcoord + j) + ((m_ycoord + i) * 64)) % 2048;
                         if (chip8->m_display[index] == 1)
                         {
                             chip8->m_registers[0xF] = 1;
@@ -213,7 +215,7 @@ void m_exec(m_chip8 *chip8)
 			switch (m_opcode & 0x00FF)
 			{
 				case 0x00A1:
-					if (chip8->m_keyboard[chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)]] == 0)
+					if (chip8->m_keyboard[chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)]] == 0)
                         chip8->m_programcounter +=  4;
                     else
                         chip8->m_programcounter += 2;
@@ -230,7 +232,7 @@ void m_exec(m_chip8 *chip8)
 					Sets VX to the value of the delay timer.
 				*/
 				case 0x0007:
-					chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] = chip8->m_delaytmr;
+					chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] = chip8->m_delaytmr;
                     chip8->m_programcounter += 2;
 					break;
 
@@ -239,12 +241,12 @@ void m_exec(m_chip8 *chip8)
 					Sets the delay timer to VX.
 				*/
 				case 0x0015:
-					chip8->m_delaytmr = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
+					chip8->m_delaytmr = chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)];
                     chip8->m_programcounter += 2;
                     break;
 
                 case 0x0018:
-                	chip8->m_soundtmr = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
+                	chip8->m_soundtmr = chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)];
                     chip8->m_programcounter += 2;
                     break;
 
@@ -254,7 +256,7 @@ void m_exec(m_chip8 *chip8)
 					Characters 0-F (in hexadecimal) are represented by a 4x5 font.
 				*/
 				case 0x0029:
-    					chip8->m_index = (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] * 0x5);
+    					chip8->m_index = (chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] * 0x5);
     					chip8->m_programcounter += 2;
     					break;
 				/*
@@ -269,15 +271,15 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("FX33 Opcode!\n"); 
 #endif
-    				chip8->m_memory[chip8->m_index] = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] / 100;
+    				chip8->m_memory[chip8->m_index] = chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] / 100;
 #ifdef DEBUG
 					printf("idx (%d)\n", chip8->m_memory[chip8->m_index]); 
 #endif
-    				chip8->m_memory[chip8->m_index + 1] = (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] / 10) % 10;
+    				chip8->m_memory[chip8->m_index + 1] = (chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] / 10) % 10;
 #ifdef DEBUG
 					printf("idx+1 (%d)\n", chip8->m_memory[chip8->m_index + 1]);
 #endif
-    				chip8->m_memory[chip8->m_index + 2] = (chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)] % 100) % 10;
+    				chip8->m_memory[chip8->m_index + 2] = (chip8->m_registers[M_OPC_0X00(chip8->m_currentopcode)] % 100) % 10;
 #ifdef DEBUG
 					printf("idx+2 (%d)\n", chip8->m_memory[chip8->m_index + 2]);
 #endif
@@ -291,14 +293,14 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0065:
 #ifdef DEBUG
-					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0F00, M_GET_X_FX(chip8->m_currentopcode));
+					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0F00, M_OPC_0X00(chip8->m_currentopcode));
 #endif
 					/* 
 						Use a for() loop to do this task, starting at V0, iterate F(x) times (Calculated above) ending
 						at V(x) register. Each time we enter the for() loop, load in the value at the index register
 						onto the current register pointed by m_currentregister in the loop
 					*/
-					for (size_t m_currentregister = 0; m_currentregister <= M_GET_X_FX(chip8->m_currentopcode); m_currentregister++)
+					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(chip8->m_currentopcode); m_currentregister++)
 					{
 						chip8->m_registers[m_currentregister] = chip8->m_memory[chip8->m_index + m_currentregister];
 					}
