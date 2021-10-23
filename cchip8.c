@@ -174,19 +174,20 @@ int main(int argc, char **argv)
 	SDL_Texture *m_texture;
 
 	// Init SDL2
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_EVERYTHING);
 
 	// Create a 500 x 500 (px) window
-	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 650, 420, 0);
+	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320,
+                              SDL_WINDOW_SHOWN);
 
 	// Set screen as a pointer to the window's surface
 	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
 
 	// Adjust the renderer size
-	SDL_RenderSetLogicalSize(m_renderer, 1024, 512);
+	SDL_RenderSetLogicalSize(m_renderer, 640, 320);
 	
 	// Setup the texture trick that'll enable us to display emulator output
-	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, CHIP8_COLUMNS, CHIP8_ROWS);
+	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
 
 	// Create an SDL2 event
 	SDL_Event event;
@@ -262,6 +263,7 @@ int main(int argc, char **argv)
 				}
 			}
 		}
+	}
 	} else {
 		while (true)
 		{
@@ -298,18 +300,23 @@ int main(int argc, char **argv)
 				if (chip8.m_redraw) {
 					chip8.m_redraw = false;
 					
-					for (int i = 0; i < 2048; ++i) {
-						uint8_t pixel = chip8.m_display[i];
-						chip8.m_pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
+					uint32_t pixels[32 * 64];
+            		for (int i = 0; i < 32 * 64; i++)
+            		{
+                		if (chip8.m_display[i] == 0)
+                		{
+                    		pixels[i] = 0xFF000000;
+                		}
+                		else
+                		{
+                    		pixels[i] = 0xFFFFFFFF;
+               			}
+            		}
 
-					}
-			
-					//Update texture
-					SDL_UpdateTexture(m_texture, NULL, chip8.m_pixels, 64 * sizeof(uint32_t));
-					//Clear and present renderer
-					SDL_RenderClear(m_renderer);
-					SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
-					SDL_RenderPresent(m_renderer);
+            		SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
+            		SDL_RenderClear(m_renderer);
+            		SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+            		SDL_RenderPresent(m_renderer);
 				}
 
 				// Update timers

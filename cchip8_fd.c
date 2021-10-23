@@ -182,24 +182,25 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
-			unsigned short x = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
-            unsigned short y = chip8->m_registers[(chip8->m_index & 0x00F0) >> 4];
-            unsigned short height = chip8->m_index & 0x000F;
-            unsigned short pixel;
-
+			int x = chip8->m_registers[M_GET_X_FX(chip8->m_currentopcode)];
+            int y = chip8->m_registers[(chip8->m_index & 0x00F0) >> 4];
+            int ht = chip8->m_index & 0x000F;
+            int wt = 8;
             chip8->m_registers[0xF] = 0;
-            for (int yline = 0; yline < height; yline++)
+
+			for (int i = 0; i < ht; i++)
             {
-                pixel = chip8->m_memory[chip8->m_index + yline];
-                for(int xline = 0; xline < 8; xline++)
+                int pixel = chip8->m_memory[chip8->m_index + i];
+                for (int j = 0; j < wt; j++)
                 {
-                    if((pixel & (0x80 >> xline)) != 0)
+                    if ((pixel & (0x80 >> j)) != 0)
                     {
-                        if(chip8->m_display[(x + xline + ((y + yline) * 64))] == 1)
+                        int index = ((x + j) + ((y + i) * 64)) % 2048;
+                        if (chip8->m_display[index] == 1)
                         {
                             chip8->m_registers[0xF] = 1;
                         }
-                        chip8->m_display[x + xline + ((y + yline) * 64)] ^= 1;
+                        chip8->m_display[index] ^= 1;
                     }
                 }
             }
