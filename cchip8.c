@@ -311,8 +311,12 @@ int main(int argc, char **argv)
 		if (m_dbgmode == false)
 		{
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
 			usleep(1500);
-
+#endif
+#ifdef __unix__
+			usleep(1500);
+#endif
 		}
 	}
 }
