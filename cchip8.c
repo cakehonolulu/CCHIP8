@@ -219,7 +219,7 @@ int main(int argc, char **argv)
 	while (true)
 	{
 		// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
-		while (SDL_PollEvent(&event))
+		if (SDL_PollEvent(&event))
 		{
 			switch (event.type)
 			{
@@ -229,30 +229,27 @@ int main(int argc, char **argv)
 					exit(9);
 					break;
 
-				if (m_dbgmode == true)
-				{
-					case SDL_KEYDOWN:
-						m_exec(&chip8);
+				case SDL_KEYDOWN:
+					m_exec(&chip8);
 
-   						printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
+					printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
 
-   						for (int i = 0; i < 16; i++)
-   						{
-   					    	printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
-   						}
+					for (int i = 0; i < 16; i++)
+					{
+				    	printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
+					}
 
-   						printf("Index Reg: 0x%X\n", chip8.m_index);
-   						printf("PC Reg: 0x%X\n", chip8.m_programcounter);
-   						printf("SP Reg: 0x%X\n", chip8.m_stackp);
-   						printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
-   						printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
-   						break;
-				} else {
+					printf("Index Reg: 0x%X\n", chip8.m_index);
+   					printf("PC Reg: 0x%X\n", chip8.m_programcounter);
+   					printf("SP Reg: 0x%X\n", chip8.m_stackp);
+   					printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
+   					printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
+   					break;
 
 				default:
 					break;
-				}	
-			}
+			}	
+		}
 
 			/*
 				Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
@@ -306,6 +303,8 @@ int main(int argc, char **argv)
 						
 				chip8.m_soundtmr--;
 			}
+
+			usleep(1500);
 		}
 	}
-}
+
