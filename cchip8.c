@@ -5,7 +5,7 @@
 
 #define CHIP8_INITIAL_PC 0x200
 
-#ifdef __MINGW32__ || __MINGW64__
+#if defined(__MINGW32__) || defined(__MINGW64__)
 int WinMain(int argc, char **argv)
 #endif
 #ifdef __unix__
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	// Implement a debug mode program flag (Enabled through command line arguments)
 	bool m_dbgmode = false;
 
-#ifdef __MINGW32__ || __MINGW64__
+#if defined(__MINGW32__) || defined(__MINGW64__)
 	printf("Running under Windows!\n");
 	// Use a char array to store the program name for later use
 	const char *m_filename = "rom.ch8";

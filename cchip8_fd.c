@@ -180,7 +180,7 @@ void m_exec(m_chip8 *chip8)
             chip8->m_programcounter += 2;
             break;
 
-#ifdef __MINGW32__ || __MINGW64__
+#if defined(__MINGW32__) || defined(__MINGW64__)
 		case 0xD000: ;
 #endif
 
