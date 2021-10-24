@@ -53,7 +53,9 @@ void m_exec(m_chip8 *chip8)
 				we need to push the return address to the stack
 			*/
 			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
+#ifdef DEBUG
 			printf("Jumping to 0x%x\n", chip8->m_currentopcode & 0x0FFF);
+#endif
 			break;
 
 		case 0x2000: // [2NNN] Cals subroutine at NNN
