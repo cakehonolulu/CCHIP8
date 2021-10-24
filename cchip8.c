@@ -6,6 +6,12 @@
 #define CHIP8_INITIAL_PC 0x200
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
+/*
+	NOTE:
+	A good idea would probably be define main() as WinMain (Following <windows.h> spec).
+	I've yet to find how to do it without a partial re-structuring of the emulator so
+	it'll get prosponed.
+*/
 int main(int argc, char **argv)
 #endif
 
@@ -312,6 +318,12 @@ int main(int argc, char **argv)
 		{
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
+			/*
+				NOTE:
+				mingw complains about using usleep, _sleep is deprecated so we *should*
+				use <windows.h>'s Sleep() function instead, investigate how it works and apply
+				a good fix.
+			*/
 			usleep(1500);
 #endif
 #ifdef __unix__
