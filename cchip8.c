@@ -183,6 +183,7 @@ int main(int argc, char **argv)
 #endif
 	}
 
+	// Set the opcode unimplemented flag to false
 	chip8.m_isUnimplemented = false;
 
 	// Declare both the window and Surface to use SDL2 abilities
