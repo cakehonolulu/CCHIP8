@@ -262,8 +262,11 @@ int main(int argc, char **argv)
 				SDL_Quit();
 				return FAIL;
 			} else {
-				// Execute the fetch & decode
-				m_exec(&chip8);
+				if (m_dbgmode == false)
+				{
+					// Execute the fetch & decode
+					m_exec(&chip8);
+				}
 			}
 
 			if (chip8.m_redraw)
@@ -304,7 +307,10 @@ int main(int argc, char **argv)
 				chip8.m_soundtmr--;
 			}
 
-			usleep(1500);
+			if (m_dbgmode == false)
+			{
+				usleep(1500);
+			}
 		}
 	}
 
