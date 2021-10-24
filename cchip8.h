@@ -6,6 +6,10 @@
 
 #include <SDL2/SDL.h>
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+#include <windows.h>
+#endif
+
 #define CHIP8_FONT_SIZE 80
 
 #define CHIP8_COLUMNS 64
