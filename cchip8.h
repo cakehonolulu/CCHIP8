@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 #include <windows.h>
@@ -93,3 +94,6 @@ typedef struct chip8
 } m_chip8;
 
 void m_exec(m_chip8 *chip8);
+
+// SDL2 Icon using RAW Data Method by blog.gibson.sh
+void SDL_SetWindowIconFromRAW(SDL_Window* m_window);
