@@ -199,160 +199,97 @@ int main(int argc, char **argv)
 	if (m_dbgmode == true)
 	{
 		printf("Entered Debug Mode!\n");
+	}
 
-		while (true)
+	while (true)
+	{
+		// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
+		while (SDL_PollEvent(&event))
 		{
-			// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
-			while (SDL_PollEvent(&event))
+			switch (event.type)
 			{
-				switch (event.type)
+				case SDL_QUIT:
+					SDL_DestroyWindow(m_window);
+					SDL_Quit();
+					exit(9);
+					break;
+
+				if (m_dbgmode == true)
 				{
-					case SDL_QUIT:
-						SDL_DestroyWindow(m_window);
-						SDL_Quit();
-						exit(9);
-						break;
 					case SDL_KEYDOWN:
 						m_exec(&chip8);
 
-    					printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
-    					for (int i = 0; i < 16; i++) {
-    					    printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
-    					}
-    					printf("Index Reg: 0x%X\n", chip8.m_index);
-    					printf("PC Reg: 0x%X\n", chip8.m_programcounter);
-    					printf("SP Reg: 0x%X\n", chip8.m_stackp);
-    					printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
-    					printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
-						
-						/*
-							Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
-							clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
-						*/
-						if (chip8.m_isUnimplemented == true)
-						{
-							printf("Exiting the main loop...\n");
-							SDL_DestroyWindow(m_window);
-							SDL_Quit();
-							return FAIL;
+   						printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
 
-						if (chip8.m_redraw) {
-							chip8.m_redraw = false;
-					
-							uint32_t pixels[32 * 64];
-            				for (int i = 0; i < 32 * 64; i++)
-            				{
-                				if (chip8.m_display[i] == 0)
-                				{
-                    				pixels[i] = 0xFF000000;
-                				}
-                				else
-                				{
-                    				pixels[i] = 0xFFFFFFFF;
-               					}
-            				}
+   						for (int i = 0; i < 16; i++)
+   						{
+   					    	printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
+   						}
 
-            				SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
-            				SDL_RenderClear(m_renderer);
-            				SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
-            				SDL_RenderPresent(m_renderer);
-						}
-
-						// Update timers
-						if (chip8.m_delaytmr > 0)
-						{
-							chip8.m_delaytmr--;
-						}
-
-						if (chip8.m_soundtmr > 0)
-						{
-							if(chip8.m_soundtmr == 1)
-							{
-								// Sound playing routine
-							}
-						chip8.m_soundtmr--;
-					}
-						break;
-						
-					default:
-						break;
-				}
-			}
-		}
-	}
-	} else {
-		while (true)
-		{
-			// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
-			while (SDL_PollEvent(&event))
-			{
-				switch (event.type)
-				{
-					case SDL_QUIT:
-						SDL_DestroyWindow(m_window);
-						SDL_Quit();
-						exit(9);
-						break;
-
-					default:
-						break;
-				}
-
-				/*
-					Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
-					clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
-				*/
-				if (chip8.m_isUnimplemented == true)
-				{
-					printf("Exiting the main loop...\n");
-					SDL_DestroyWindow(m_window);
-					SDL_Quit();
-					return FAIL;
+   						printf("Index Reg: 0x%X\n", chip8.m_index);
+   						printf("PC Reg: 0x%X\n", chip8.m_programcounter);
+   						printf("SP Reg: 0x%X\n", chip8.m_stackp);
+   						printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
+   						printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
+   						break;
 				} else {
-					// Execute the fetch & decode
-					m_exec(&chip8);
-				}
 
-				if (chip8.m_redraw) {
-					chip8.m_redraw = false;
-					
-					uint32_t pixels[32 * 64];
-            		for (int i = 0; i < 32 * 64; i++)
-            		{
-                		if (chip8.m_display[i] == 0)
-                		{
-                    		pixels[i] = 0xFF000000;
-                		}
-                		else
-                		{
-                    		pixels[i] = 0xFFFFFFFF;
-               			}
-            		}
+				default:
+					break;
+				}	
+			}
 
-            		SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
-            		SDL_RenderClear(m_renderer);
-            		SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
-            		SDL_RenderPresent(m_renderer);
-				}
+			/*
+				Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
+				clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
+			*/
+			if (chip8.m_isUnimplemented == true)
+			{
+				printf("Exiting the main loop...\n");
+				SDL_DestroyWindow(m_window);
+				SDL_Quit();
+				return FAIL;
+			} else {
+				// Execute the fetch & decode
+				m_exec(&chip8);
+			}
 
-				// Update timers
-				if (chip8.m_delaytmr > 0)
-				{
-					chip8.m_delaytmr--;
-				}
+			if (chip8.m_redraw)
+			{
+				chip8.m_redraw = false;
+				
+				uint32_t pixels[32 * 64];
 
-				if (chip8.m_soundtmr > 0)
-				{
-					if(chip8.m_soundtmr == 1)
-					{
-						// Sound playing routine
+           		for (int i = 0; i < 32 * 64; i++)
+           		{
+               		if (chip8.m_display[i] == 0)
+               		{
+						pixels[i] = 0xFF000000;
+	           		} else {
+						pixels[i] = 0xFFFFFFFF;
 					}
-
-					chip8.m_soundtmr--;
 				}
 
-				// Let the CPU sleep
-				SDL_Delay(16);
+				SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
+				SDL_RenderClear(m_renderer);
+				SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+				SDL_RenderPresent(m_renderer);
+			}
+
+			// Update timers
+			if (chip8.m_delaytmr > 0)
+			{
+				chip8.m_delaytmr--;
+			}
+
+			if (chip8.m_soundtmr > 0)
+			{
+				if(chip8.m_soundtmr == 1)
+				{
+					// Sound playing routine
+				}
+						
+				chip8.m_soundtmr--;
 			}
 		}
 	}
