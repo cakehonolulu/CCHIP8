@@ -196,7 +196,12 @@ int main(int argc, char **argv)
 	SDL_Texture *m_texture;
 
 	// Init SDL2
-	SDL_Init(SDL_INIT_EVERYTHING);
+	// SDL_INIT_VIDEO automatically enables SDL2 Events, we can OR SDL_INIT_AUDIO and SDL_INIT_TIMER if needed in the future
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		SDL_Log("Unable to initialize SDL2: %s", SDL_GetError());
+        return EXIT_FAILURE;
+	}
 
 	// Create a 640 x 320 (px) window
 	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
