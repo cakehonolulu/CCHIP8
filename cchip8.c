@@ -225,6 +225,12 @@ int main(int argc, char **argv)
 	// Setup the texture trick that'll enable us to display emulator output
 	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, CHIP8_COLUMNS, CHIP8_ROWS);
 
+	// Check if texture could not be made
+	if (m_texture == NULL)
+	{
+		printf("Could not create SDL2 Texture: %s\n", SDL_GetError());
+	}
+
 	// Set SDL2 Icon using RAW Data Method by blog.gibson.sh
 	/*
 		NOTE:
@@ -250,11 +256,20 @@ int main(int argc, char **argv)
 			switch (m_event.type)
 			{
 				case SDL_QUIT:
+					// Delist the Texture
+					m_texture = NULL;
+
 					// Deallocate the Texture
 					SDL_DestroyTexture(m_texture);
 
+					// Delist the Renderer
+					m_renderer = NULL;
+
 					// Deallocate the Renderer
 					SDL_DestroyRenderer(m_renderer);
+
+					// Delist the Window
+					m_window = NULL;
 
 					// Deallocate the Window
 					SDL_DestroyWindow(m_window);
@@ -296,11 +311,20 @@ int main(int argc, char **argv)
 		{
 			printf("Exiting the main loop...\n");
 
+			// Delist the Texture
+			m_texture = NULL;
+
 			// Deallocate the Texture
 			SDL_DestroyTexture(m_texture);
 
+			// Delist the Renderer
+			m_renderer = NULL;
+
 			// Deallocate the Renderer
 			SDL_DestroyRenderer(m_renderer);
+
+			// Delist the Window
+			m_window = NULL;
 
 			// Deallocate the Window
 			SDL_DestroyWindow(m_window);
@@ -397,6 +421,12 @@ void SDL_SetWindowIconFromRAW(SDL_Window* m_window)
   SDL_Surface* m_icon = SDL_CreateRGBSurfaceFrom((void*)m_cchip8_icn.pixel_data,
       m_cchip8_icn.width, m_cchip8_icn.height, m_cchip8_icn.bytes_per_pixel*8,
       m_cchip8_icn.bytes_per_pixel*m_cchip8_icn.width, rmask, gmask, bmask, amask);
+
+  // Check if surface could not be made
+  if (m_icon == NULL)
+  {
+  	printf("Could not create SDL2 Surface: %s\n", SDL_GetError());
+  }
 
   SDL_SetWindowIcon(m_window, m_icon);
 
