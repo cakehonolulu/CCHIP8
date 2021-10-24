@@ -212,6 +212,13 @@ int main(int argc, char **argv)
 	// Set screen as a pointer to the window's surface
 	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
 
+	// Check if renderer could be crafted
+	if (m_renderer == NULL)
+	{
+        printf("Could not create SDL2 Renderer: %s\n", SDL_GetError());
+        return EXIT_FAILURE;
+    }
+
 	// Adjust the renderer size
 	SDL_RenderSetLogicalSize(m_renderer, (CHIP8_COLUMNS * 10), (CHIP8_ROWS * 10));
 	
