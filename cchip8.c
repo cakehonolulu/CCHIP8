@@ -13,9 +13,10 @@ int WinMain(int argc, char **argv)
 int main(int argc, char **argv)
 #endif
 {
-	printf("CCHIP8 - A C-21 CHIP8 Interpreter Emulator for Linux by cakehonolulu\n");
+	printf("CCHIP8 - A C-21 Multiplatform CHIP8 Interpreter Emulator by cakehonolulu\n");
 
 #ifdef __unix__
+	printf("Running under Linux!\n");
 	// Check for commandline arguments
 	if (argc < 2)
 	{
@@ -30,6 +31,7 @@ int main(int argc, char **argv)
 	bool m_dbgmode = false;
 
 #ifdef __MINGW32__ || __MINGW64__
+	printf("Running under Windows!\n");
 	// Use a char array to store the program name for later use
 	const char *m_filename = "rom.ch8";
 #endif
