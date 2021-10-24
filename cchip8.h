@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 #include <windows.h>

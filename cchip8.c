@@ -212,6 +212,14 @@ int main(int argc, char **argv)
 	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
 
 	// Set SDL2 Icon using RAW Data Method by blog.gibson.sh
+	/*
+		NOTE:
+		Windows: Icon gets displayed as a Window Icon. Taskbar icon needs to be handled in some other way.
+		Linux (Ubuntu-WSL): Icon gets displayed in the taskbar but not in the window icon.
+
+		If we use this method for setting the icon, we can skip over including another SDL2 dependency
+		(SDL2_image) and write the RAW Icon data inside the program. 
+	*/
 	SDL_SetWindowIconFromRAW(m_window);
 
 	// Create an SDL2 event
