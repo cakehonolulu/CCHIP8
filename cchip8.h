@@ -13,7 +13,7 @@
 #define CHIP8_FONT_SIZE 80
 
 #define CHIP8_COLUMNS 64
-#define CHIP8_ROWS 30
+#define CHIP8_ROWS 32
 
 #define M_OPC_0X00(x)  ((x & 0x0F00) >> 8)
 

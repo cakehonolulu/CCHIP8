@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 			{
 				// If "-d" or "-D" switches are found, enable debugger mode 
 				m_dbgmode = true;
-				printf("Debugger enabled!\n");
+				printf("Entered Debug Mode!\n");
 			} else {
 				// If the switch doesn't exist, warn the user and exit
 				printf("Invalid switch!\n");
@@ -198,18 +198,18 @@ int main(int argc, char **argv)
 	// Init SDL2
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	// Create a 500 x 500 (px) window
-	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320,
-							  SDL_WINDOW_SHOWN);
+	// Create a 640 x 320 (px) window
+	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+							  (CHIP8_COLUMNS * 10), (CHIP8_ROWS * 10), SDL_WINDOW_SHOWN);
 
 	// Set screen as a pointer to the window's surface
 	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
 
 	// Adjust the renderer size
-	SDL_RenderSetLogicalSize(m_renderer, 640, 320);
+	SDL_RenderSetLogicalSize(m_renderer, (CHIP8_COLUMNS * 10), (CHIP8_ROWS * 10));
 	
 	// Setup the texture trick that'll enable us to display emulator output
-	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 64, 32);
+	m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, CHIP8_COLUMNS, CHIP8_ROWS);
 
 	// Set SDL2 Icon using RAW Data Method by blog.gibson.sh
 	/*
@@ -222,17 +222,11 @@ int main(int argc, char **argv)
 	*/
 	SDL_SetWindowIconFromRAW(m_window);
 
-	// Create an SDL2 event
-	SDL_Event event;
-
 	// Update the framebuffer with all the changes
 	SDL_UpdateWindowSurface(m_window);
 
-	// If Debug Mode is enabled, instead of jumping into the regular emulation, open the debugger instead
-	if (m_dbgmode == true)
-	{
-		printf("Entered Debug Mode!\n");
-	}
+	// Create an SDL2 event
+	SDL_Event event;
 
 	while (true)
 	{
