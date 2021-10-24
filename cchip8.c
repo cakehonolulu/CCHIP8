@@ -8,7 +8,6 @@
 #ifdef __MINGW32__ || __MINGW64__
 int WinMain(int argc, char **argv)
 #endif
-
 #ifdef __unix__
 int main(int argc, char **argv)
 #endif
@@ -63,6 +62,7 @@ int main(int argc, char **argv)
 		}
 	}
 #endif
+
 	// Use the FILE directive to access a file
 	FILE *m_prg;
 
@@ -161,12 +161,12 @@ int main(int argc, char **argv)
 	// Close the file pipe
 	fclose(m_prg);
 
-	// Now load the font into the interpreter's memory
 #ifdef DEBUG
 	printf("Loading the font into memory...\n");
 	printf("Font Memory Map: \n");
 #endif
 
+	// Now load the font into the interpreter's memory
 	for (unsigned int i = 0; i < CHIP8_FONT_SIZE; i++)
 	{
 		chip8.m_memory[i] = m_font[i];
