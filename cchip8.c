@@ -288,9 +288,21 @@ int main(int argc, char **argv)
 		if (chip8.m_isUnimplemented == true)
 		{
 			printf("Exiting the main loop...\n");
+			
+			// Deallocate the Texture
+			SDL_DestroyTexture(m_texture);
+
+			// Deallocate the Renderer
+			SDL_DestroyRenderer(m_renderer);
+
+			// Deallocate the Window
 			SDL_DestroyWindow(m_window);
+
+			// Close all SDL2 Subsystems
 			SDL_Quit();
-			return EXIT_FAILURE;
+
+			// Exit the program returning a failure
+			exit(EXIT_FAILURE);
 		} else {
 			if (m_dbgmode == false)
 			{
