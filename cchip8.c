@@ -243,9 +243,20 @@ int main(int argc, char **argv)
 			switch (event.type)
 			{
 				case SDL_QUIT:
+					// Deallocate the Texture
+					SDL_DestroyTexture(m_texture);
+
+					// Deallocate the Renderer
+					SDL_DestroyRenderer(m_renderer);
+
+					// Deallocate the Window
 					SDL_DestroyWindow(m_window);
+
+					// Close all SDL2 Subsystems
 					SDL_Quit();
-					exit(9);
+
+					// Exit the program successfully
+					exit(EXIT_SUCCESS);
 					break;
 
 				case SDL_KEYDOWN:
