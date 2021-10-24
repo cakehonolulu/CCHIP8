@@ -8,6 +8,7 @@
 #if defined(__MINGW32__) || defined(__MINGW64__)
 int main(int argc, char **argv)
 #endif
+
 #ifdef __unix__
 int main(int argc, char **argv)
 #endif
@@ -309,12 +310,9 @@ int main(int argc, char **argv)
 
 		if (m_dbgmode == false)
 		{
-#ifdef __unix__
+
 			usleep(1500);
-#endif
-#if defined(__MINGW32__) || defined(__MINGW64__)
-			Sleep(1500);
-#endif
+
 		}
 	}
 }
