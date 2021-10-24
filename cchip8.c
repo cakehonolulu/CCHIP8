@@ -1,7 +1,5 @@
 #include "cchip8.h"
 
-#define CHIP8_INITIAL_PC 0x200
-
 #if defined(__MINGW32__) || defined(__MINGW64__)
 /*
 	NOTE:
