@@ -1,8 +1,5 @@
 #include "cchip8.h"
 
-#define OK 0
-#define FAIL 1
-
 #define CHIP8_INITIAL_PC 0x200
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
@@ -29,7 +26,7 @@ int main(int argc, char **argv)
 		printf("Usage: ./cchip8 [flags] [progname]\n");
 		printf("Command-line switches:\n");
 		printf("-[d or D] Enable the built-in debugger\n");
-		return FAIL;
+		return EXIT_FAILURE;
 	}
 #endif
 
@@ -58,7 +55,7 @@ int main(int argc, char **argv)
 			} else {
 				// If the switch doesn't exist, warn the user and exit
 				printf("Invalid switch!\n");
-				return FAIL;
+				return EXIT_FAILURE;
 			}
 		} else {
 			// Store the filename into m_filename
@@ -80,7 +77,7 @@ int main(int argc, char **argv)
 	if(m_prg == NULL)
 	{
 		printf("Could not open the program file, exiting...\n");
-		return FAIL;
+		return EXIT_FAILURE;
 	} else {
 		printf("Program file loaded successfully\n");
 	}
@@ -136,7 +133,7 @@ int main(int argc, char **argv)
 	if (m_prg_buf == NULL)
 	{
 		printf("Couldn't allocate memory, exiting...\n");
-		return FAIL;
+		return EXIT_FAILURE;
 	}
 
 	// Load the file into host memory
@@ -277,7 +274,7 @@ int main(int argc, char **argv)
 			printf("Exiting the main loop...\n");
 			SDL_DestroyWindow(m_window);
 			SDL_Quit();
-			return FAIL;
+			return EXIT_FAILURE;
 		} else {
 			if (m_dbgmode == false)
 			{
