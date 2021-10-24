@@ -233,14 +233,14 @@ int main(int argc, char **argv)
 	SDL_UpdateWindowSurface(m_window);
 
 	// Create an SDL2 event
-	SDL_Event event;
+	SDL_Event m_event;
 
 	while (true)
 	{
 		// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
-		if (SDL_PollEvent(&event))
+		if (SDL_PollEvent(&m_event))
 		{
-			switch (event.type)
+			switch (m_event.type)
 			{
 				case SDL_QUIT:
 					// Deallocate the Texture
@@ -288,7 +288,7 @@ int main(int argc, char **argv)
 		if (chip8.m_isUnimplemented == true)
 		{
 			printf("Exiting the main loop...\n");
-			
+
 			// Deallocate the Texture
 			SDL_DestroyTexture(m_texture);
 
