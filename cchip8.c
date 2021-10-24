@@ -202,6 +202,13 @@ int main(int argc, char **argv)
 	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 							  (CHIP8_COLUMNS * 10), (CHIP8_ROWS * 10), SDL_WINDOW_SHOWN);
 
+	// Check if Window could be crafted
+	if (m_window == NULL)
+	{
+        printf("Could not create SDL2 Window: %s\n", SDL_GetError());
+        return EXIT_FAILURE;
+    }
+
 	// Set screen as a pointer to the window's surface
 	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
 
