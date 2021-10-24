@@ -178,7 +178,7 @@ void m_exec(m_chip8 *chip8)
             chip8->m_programcounter += 2;
             break;
 
-		case 0xD000:
+		case 0xD000: ;
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
@@ -186,6 +186,7 @@ void m_exec(m_chip8 *chip8)
 			int m_xcoord = chip8->m_registers[(chip8->m_currentopcode & 0x0F00) >> 8];
 
             int m_ycoord = chip8->m_registers[(chip8->m_currentopcode & 0x00F0) >> 4];
+
             int ht = chip8->m_currentopcode & 0x000F;
             int wt = 8;
             chip8->m_registers[0xF] = 0;
