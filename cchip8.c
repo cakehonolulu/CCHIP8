@@ -193,7 +193,7 @@ int main(int argc, char **argv)
 
 	// Create a 500 x 500 (px) window
 	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 320,
-                              SDL_WINDOW_SHOWN);
+							  SDL_WINDOW_SHOWN);
 
 	// Set screen as a pointer to the window's surface
 	m_renderer = SDL_CreateRenderer(m_window, -1, 0);
@@ -236,81 +236,80 @@ int main(int argc, char **argv)
 
 					for (int i = 0; i < 16; i++)
 					{
-				    	printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
+						printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
 					}
 
 					printf("Index Reg: 0x%X\n", chip8.m_index);
-   					printf("PC Reg: 0x%X\n", chip8.m_programcounter);
-   					printf("SP Reg: 0x%X\n", chip8.m_stackp);
-   					printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
-   					printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
-   					break;
+					printf("PC Reg: 0x%X\n", chip8.m_programcounter);
+					printf("SP Reg: 0x%X\n", chip8.m_stackp);
+					printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
+					printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
+					break;
 
 				default:
 					break;
 			}	
 		}
 
-			/*
-				Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
-				clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
-			*/
-			if (chip8.m_isUnimplemented == true)
-			{
-				printf("Exiting the main loop...\n");
-				SDL_DestroyWindow(m_window);
-				SDL_Quit();
-				return FAIL;
-			} else {
-				if (m_dbgmode == false)
-				{
-					// Execute the fetch & decode
-					m_exec(&chip8);
-				}
-			}
-
-			if (chip8.m_redraw)
-			{
-				chip8.m_redraw = false;
-				
-				uint32_t pixels[32 * 64];
-
-           		for (int i = 0; i < 32 * 64; i++)
-           		{
-               		if (chip8.m_display[i] == 0)
-               		{
-						pixels[i] = 0xFF000000;
-	           		} else {
-						pixels[i] = 0xFFFFFFFF;
-					}
-				}
-
-				SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
-				SDL_RenderClear(m_renderer);
-				SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
-				SDL_RenderPresent(m_renderer);
-			}
-
-			// Update timers
-			if (chip8.m_delaytmr > 0)
-			{
-				chip8.m_delaytmr--;
-			}
-
-			if (chip8.m_soundtmr > 0)
-			{
-				if(chip8.m_soundtmr == 1)
-				{
-					// Sound playing routine
-				}
-						
-				chip8.m_soundtmr--;
-			}
-
+		/*
+			Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
+			clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
+		*/
+		if (chip8.m_isUnimplemented == true)
+		{
+			printf("Exiting the main loop...\n");
+			SDL_DestroyWindow(m_window);
+			SDL_Quit();
+			return FAIL;
+		} else {
 			if (m_dbgmode == false)
 			{
-				usleep(1500);
+				// Execute the fetch & decode
+				m_exec(&chip8);
 			}
 		}
-	}
 
+		if (chip8.m_redraw)
+		{
+			chip8.m_redraw = false;
+				
+			uint32_t pixels[32 * 64];
+
+			for (int i = 0; i < 32 * 64; i++)
+			{
+				if (chip8.m_display[i] == 0)
+				{
+					pixels[i] = 0xFF000000;
+				} else {
+					pixels[i] = 0xFFFFFFFF;
+				}
+			}
+
+			SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
+			SDL_RenderClear(m_renderer);
+			SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+			SDL_RenderPresent(m_renderer);
+		}
+
+		// Update timers
+		if (chip8.m_delaytmr > 0)
+		{
+			chip8.m_delaytmr--;
+		}
+
+		if (chip8.m_soundtmr > 0)
+		{
+			if(chip8.m_soundtmr == 1)
+			{
+				// Sound playing routine
+			}
+					
+			chip8.m_soundtmr--;
+		}
+
+		if (m_dbgmode == false)
+		{
+			usleep(1500);
+		}
+	}
+}
