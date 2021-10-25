@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __unix__
+#include <unistd.h>
+#endif
+
 #include <SDL2/SDL.h>
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
