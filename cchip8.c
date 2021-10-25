@@ -1,6 +1,6 @@
 #include "cchip8.h"
 
-
+// Import Nuklear for use with SDL
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -10,12 +10,11 @@
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_INCLUDE_SOFTWARE_FONT
 
-#include "nuklear.h"
+#include "nuklear/nuklear.h"
 
 #define NK_SDLSURFACE_IMPLEMENTATION
 
-#include "sdl2surface_rawfb.h"
-
+#include "nuklear/sdl2surface_rawfb.h"
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 /*
