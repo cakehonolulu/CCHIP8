@@ -252,7 +252,7 @@ int main(int argc, char **argv)
 	while (true)
 	{
 		// Use a while() block waiting for SDL_PollEvent to intercept keyboard and sound events
-		if (SDL_PollEvent(&m_event))
+		while (SDL_PollEvent(&m_event))
 		{
 			switch (m_event.type)
 			{
@@ -283,27 +283,178 @@ int main(int argc, char **argv)
 					break;
 
 				case SDL_KEYDOWN:
-					m_exec(&chip8);
-
-					printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
-
-					for (int i = 0; i < 16; i++)
+					if (m_dbgmode == true)
 					{
-						printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
-					}
+						m_exec(&chip8);
 
-					printf("Index Reg: 0x%X\n", chip8.m_index);
-					printf("PC Reg: 0x%X\n", chip8.m_programcounter);
-					printf("SP Reg: 0x%X\n", chip8.m_stackp);
-					printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
-					printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
-					break;
+						printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
 
+						for (int i = 0; i < 16; i++)
+						{
+							printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
+						}
+
+						printf("Index Reg: 0x%X\n", chip8.m_index);
+						printf("PC Reg: 0x%X\n", chip8.m_programcounter);
+						printf("SP Reg: 0x%X\n", chip8.m_stackp);
+						printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
+						printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
+						break;
+					} else {
+						switch(m_event.key.keysym.sym)
+						{
+							// List of keys can be found at https://www.libsdl.org/release/SDL-1.2.15/docs/html/sdlkey.html
+							// TODO: There's probably a better way of doing this, maybe using a function that interprets input?
+							case SDLK_1:
+								chip8.m_keyboard[0x0] = 1;
+								break;
+	
+							case SDLK_2:
+								chip8.m_keyboard[0x1] = 1;
+								break;
+
+							case SDLK_3:
+								chip8.m_keyboard[0x2] = 1;
+								break;
+
+							case SDLK_4:
+								chip8.m_keyboard[0x3] = 1;
+								break;
+
+							case SDLK_q:
+								chip8.m_keyboard[0x4] = 1;
+								break;
+
+							case SDLK_w:
+								chip8.m_keyboard[0x5] = 1;
+								break;
+
+							case SDLK_e:
+								chip8.m_keyboard[0x6] = 1;
+								break;
+
+							case SDLK_r:
+								chip8.m_keyboard[0x7] = 1;
+								break;
+
+							case SDLK_a:
+								chip8.m_keyboard[0x8] = 1;
+								break;
+
+							case SDLK_s:
+								chip8.m_keyboard[0x9] = 1;
+								break;
+
+							case SDLK_d:
+								chip8.m_keyboard[0xA] = 1;
+								break;
+
+							case SDLK_f:
+								chip8.m_keyboard[0xB] = 1;
+								break;
+
+							case SDLK_z:
+								chip8.m_keyboard[0xC] = 1;
+								break;
+
+							case SDLK_x:
+								chip8.m_keyboard[0xD] = 1;
+								break;
+
+							case SDLK_c:
+								chip8.m_keyboard[0xE] = 1;
+								break;
+
+							case SDLK_v:
+								chip8.m_keyboard[0xF] = 1;
+								break;
+
+							default:
+								break;
+						} // End switch statement
+					} // End if m_dbgmode... statement
+
+				case SDL_KEYUP:
+
+					if (m_dbgmode == false)
+					{
+						switch(m_event.key.keysym.sym)
+						{
+							case SDLK_1:
+								chip8.m_keyboard[0x0] = 0;
+								break;
+
+							case SDLK_2:
+								chip8.m_keyboard[0x1] = 0;
+								break;
+
+							case SDLK_3:
+								chip8.m_keyboard[0x2] = 0;
+								break;
+
+							case SDLK_4:
+								chip8.m_keyboard[0x3] = 0;
+								break;
+
+							case SDLK_q:
+								chip8.m_keyboard[0x4] = 0;
+								break;
+
+							case SDLK_w:
+								chip8.m_keyboard[0x5] = 0;
+								break;
+
+							case SDLK_e:
+								chip8.m_keyboard[0x6] = 0;
+								break;
+
+							case SDLK_r:
+								chip8.m_keyboard[0x7] = 0;
+								break;
+
+							case SDLK_a:
+								chip8.m_keyboard[0x8] = 0;
+								break;
+
+							case SDLK_s:
+								chip8.m_keyboard[0x9] = 0;
+								break;
+
+							case SDLK_d:
+								chip8.m_keyboard[0xA] = 0;
+								break;
+
+							case SDLK_f:
+								chip8.m_keyboard[0xB] = 0;
+								break;
+
+							case SDLK_z:
+								chip8.m_keyboard[0xC] = 0;
+								break;
+
+							case SDLK_x:
+								chip8.m_keyboard[0xD] = 0;
+								break;
+
+							case SDLK_c:
+								chip8.m_keyboard[0xE] = 0;
+								break;
+
+							case SDLK_v:
+								chip8.m_keyboard[0xF] = 0;
+								break;
+
+							default:
+								break;
+						}	// End switch statement
+					} // End if m_dbgmode... statement
+									
+				// Default switch SDLEvent ending
 				default:
 					break;
-			}	
+			}
 		}
-
+		
 		/*
 			Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
 			clear the SDL2 surface, close the GUI window and quit SDL2 altogether.
