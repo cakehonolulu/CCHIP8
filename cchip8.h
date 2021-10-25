@@ -10,9 +10,15 @@
 #include <windows.h>
 #endif
 
+#define FOURKiB 4096
+
 #define CHIP8_FONT_SIZE 80
 
 #define CHIP8_KEYS 16
+
+#define CHIP8_REGISTERS 16
+
+#define CHIP8_MAXSTACKENTRIES 16
 
 #define CHIP8_COLUMNS 64
 #define CHIP8_ROWS 32
@@ -63,7 +69,7 @@ static const uint8_t m_sdl_keys[CHIP8_KEYS] = {
 typedef struct chip8
 {
 	// CHIP8 - Arithmetic Registers
-	uint8_t m_registers[16];
+	uint8_t m_registers[CHIP8_REGISTERS];
 
 	// CHIP8 - Index Register
 	uint16_t m_index;
@@ -72,7 +78,7 @@ typedef struct chip8
 	uint16_t m_programcounter;
 
 	// CHIP8 - Stack Pointer (SP) Register
-	uint16_t m_stack[16];
+	uint16_t m_stack[CHIP8_MAXSTACKENTRIES];
 	uint8_t m_stackp;
 
 	// CHIP8 - Memory
@@ -80,7 +86,7 @@ typedef struct chip8
 	// system memory. You can find a CHIP8 memory 
 	// map at http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#0.0
 	// Declare an array containing (4096) entries
-	uint8_t m_memory[4096];
+	uint8_t m_memory[FOURKiB];
 
 	// CHIP8 - Input
 	// CHIP8 has 16 total keyboard keys
@@ -92,10 +98,10 @@ typedef struct chip8
 	// CHIP8 has a (row:col) 64 by 32 pixel buffer
 	// Declare an array containing (64*32=2048) entries
 	// to address the totality of the video buffer
-	int m_display[64 * 32];
+	int m_display[CHIP8_COLUMNS * CHIP8_ROWS];
 
 	// Pixel representation for SDL texture
-	uint32_t m_pixels[2048];
+	uint32_t m_pixels[CHIP8_COLUMNS * CHIP8_ROWS];
 
 	// CHIP8 - Timer Registers
 	uint8_t m_soundtmr;
