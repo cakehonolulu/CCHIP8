@@ -215,6 +215,10 @@
 /// ## API
 ///
 */
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 #ifndef NK_SINGLE_FILE
   #define NK_SINGLE_FILE
 #endif
