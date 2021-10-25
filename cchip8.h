@@ -119,6 +119,7 @@ typedef struct chip8
 
 	// Store current opcode
 	uint16_t m_currentopcode;
+
 } m_chip8;
 
 void m_exec(m_chip8 *chip8);
