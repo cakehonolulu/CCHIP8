@@ -92,13 +92,13 @@ typedef struct chip8
 	// CHIP8 has 16 total keyboard keys
 	// Declare an array containing 16 entries
 	// to manage keyboard inputs
-	int m_keyboard[CHIP8_KEYS];
+	uint8_t m_keyboard[CHIP8_KEYS];
 
 	// CHIP8 - Output
 	// CHIP8 has a (row:col) 64 by 32 pixel buffer
 	// Declare an array containing (64*32=2048) entries
 	// to address the totality of the video buffer
-	int m_display[CHIP8_COLUMNS * CHIP8_ROWS];
+	uint32_t m_display[CHIP8_COLUMNS * CHIP8_ROWS];
 
 	// Pixel representation for SDL texture
 	uint32_t m_pixels[CHIP8_COLUMNS * CHIP8_ROWS];
