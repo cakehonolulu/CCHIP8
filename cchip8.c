@@ -280,9 +280,12 @@ int main(int argc, char **argv)
 
 					// Exit the program successfully
 					exit(EXIT_SUCCESS);
+					
+					// End case SDL_QUIT
 					break;
 
 				case SDL_KEYDOWN:
+					// Check if debug mode is enabled
 					if (m_dbgmode == true)
 					{
 						m_exec(&chip8);
@@ -300,82 +303,87 @@ int main(int argc, char **argv)
 						printf("Delay Timer Reg: 0x%X\n", chip8.m_delaytmr);
 						printf("Sound Timer Reg: 0x%X\n", chip8.m_soundtmr);
 						break;
-					} else {
-						switch(m_event.key.keysym.sym)
-						{
-							// List of keys can be found at https://www.libsdl.org/release/SDL-1.2.15/docs/html/sdlkey.html
-							// TODO: There's probably a better way of doing this, maybe using a function that interprets input?
-							case SDLK_1:
+					}
+
+					switch(m_event.key.keysym.sym)
+					{
+						// List of keys can be found at https://www.libsdl.org/release/SDL-1.2.15/docs/html/sdlkey.html
+						// TODO: There's probably a better way of doing this, maybe using a function that interprets input?
+						case SDLK_1:
 								chip8.m_keyboard[0x0] = 1;
 								break;
 	
-							case SDLK_2:
+						case SDLK_2:
 								chip8.m_keyboard[0x1] = 1;
 								break;
 
-							case SDLK_3:
+						case SDLK_3:
 								chip8.m_keyboard[0x2] = 1;
 								break;
 
-							case SDLK_4:
+						case SDLK_4:
 								chip8.m_keyboard[0x3] = 1;
 								break;
 
-							case SDLK_q:
+						case SDLK_q:
 								chip8.m_keyboard[0x4] = 1;
 								break;
 
-							case SDLK_w:
+						case SDLK_w:
 								chip8.m_keyboard[0x5] = 1;
 								break;
 
-							case SDLK_e:
+						case SDLK_e:
 								chip8.m_keyboard[0x6] = 1;
 								break;
 
-							case SDLK_r:
+						case SDLK_r:
 								chip8.m_keyboard[0x7] = 1;
 								break;
 
-							case SDLK_a:
+						case SDLK_a:
 								chip8.m_keyboard[0x8] = 1;
 								break;
 
-							case SDLK_s:
+						case SDLK_s:
 								chip8.m_keyboard[0x9] = 1;
 								break;
 
-							case SDLK_d:
+						case SDLK_d:
 								chip8.m_keyboard[0xA] = 1;
 								break;
 
-							case SDLK_f:
+						case SDLK_f:
 								chip8.m_keyboard[0xB] = 1;
 								break;
 
-							case SDLK_z:
+						case SDLK_z:
 								chip8.m_keyboard[0xC] = 1;
 								break;
 
-							case SDLK_x:
+						case SDLK_x:
 								chip8.m_keyboard[0xD] = 1;
 								break;
 
-							case SDLK_c:
+						case SDLK_c:
 								chip8.m_keyboard[0xE] = 1;
 								break;
 
-							case SDLK_v:
+						case SDLK_v:
 								chip8.m_keyboard[0xF] = 1;
 								break;
 
-							default:
-								break;
-						} // End switch statement
-					} // End if m_dbgmode... statement
+						// End with a default at the end of the switch() statement
+						default:
+							break;
+					}
+					// End m_event.key.keysym.sym switch() statement
+
+					// End case SDL_KEYDOWN
+					break;
 
 				case SDL_KEYUP:
-
+					// Check if debug mode isn't enabled
 					if (m_dbgmode == false)
 					{
 						switch(m_event.key.keysym.sym)
@@ -447,13 +455,17 @@ int main(int argc, char **argv)
 							default:
 								break;
 						}	// End switch statement
-					} // End if m_dbgmode... statement
+					}
+					// End if m_dbgmode... statement
+					break;
 									
-				// Default switch SDLEvent ending
+				// End m_event switch() statement
 				default:
 					break;
 			}
 		}
+		
+		// Once SDL's PollEvent while() has returned, continue with execution
 		
 		/*
 			Check if opcode is unimplemented, if true, exit the main emulator loop (Fetch & Decode),
