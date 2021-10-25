@@ -1,5 +1,7 @@
 # Compiled Files
-a.out
+*.out
+*.exe
+cchip8
 
 # ROM Files
 *.ch8
