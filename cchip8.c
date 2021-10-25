@@ -292,9 +292,9 @@ int main(int argc, char **argv)
 
 						printf("\n\nCurrent OP: 0x%X\n", chip8.m_currentopcode);
 
-						for (int i = 0; i < 16; i++)
+						for (size_t i = 0; i < 16; i++)
 						{
-							printf("V Reg %X: 0x%X\n",i , chip8.m_registers[i]);
+							printf("V Reg %zu: 0x%X\n",i , chip8.m_registers[i]);
 						}
 
 						printf("Index Reg: 0x%X\n", chip8.m_index);
@@ -305,7 +305,7 @@ int main(int argc, char **argv)
 						break;
 					}
 
-					for (int i = 0; i < 16; i++)
+					for (size_t i = 0; i < CHIP8_KEYS; i++)
 					{
 						if (m_event.key.keysym.sym == m_sdl_keys[i])
 						{
@@ -320,9 +320,9 @@ int main(int argc, char **argv)
 					// Check if debug mode isn't enabled
 					if (m_dbgmode == false)
 					{
-						for (int i = 0; i < 16; i++)
+						for (size_t i = 0; i < CHIP8_KEYS; i++)
 						{
-							if (m_event.key.keysym.sym == SDL_Keys[i])
+							if (m_event.key.keysym.sym == m_sdl_keys[i])
 							{
 								chip8.m_keyboard[i] = 0;
 							}
