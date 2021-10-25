@@ -1,21 +1,5 @@
 #include "cchip8.h"
 
-// Import Nuklear for use with SDL
-#define NK_INCLUDE_FIXED_TYPES
-#define NK_INCLUDE_STANDARD_IO
-#define NK_INCLUDE_STANDARD_VARARGS
-#define NK_INCLUDE_DEFAULT_ALLOCATOR
-#define NK_IMPLEMENTATION
-#define NK_INCLUDE_FONT_BAKING
-#define NK_INCLUDE_DEFAULT_FONT
-#define NK_INCLUDE_SOFTWARE_FONT
-
-#include "nuklear/nuklear.h"
-
-#define NK_SDLSURFACE_IMPLEMENTATION
-
-#include "nuklear/sdl2surface_rawfb.h"
-
 #if defined(__MINGW32__) || defined(__MINGW64__)
 /*
 	NOTE:
@@ -264,34 +248,6 @@ int main(int argc, char **argv)
 
 	// Create an SDL2 event
 	SDL_Event m_event;
-
-	if (m_dbgmode == true)
-	{
-    	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
-    	SDL_DisplayMode dm;
-
-    	SDL_GetDesktopDisplayMode(0, &dm);
-
-    	printf("desktop display mode %d %d\n", dm.w, dm.h);
-
-
-    	SDL_Window *window = SDL_CreateWindow("CCHIP8 Disassembler & Debugger (Nuklear - SDL2)", 10, 10, 500, 500, SDL_WINDOW_OPENGL);
-    	
-    	if (!window)
-    	{
-    	    printf("can't open window!\n");
-    	    exit(1);
-    	}
-
-
-    	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
-
-    	SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, 500, 500, 32, SDL_PIXELFORMAT_ARGB8888);
-
-
-    	struct sdlsurface_context *context = nk_sdlsurface_init(surface, 13.0f);
-	}
 
 	while (true)
 	{
