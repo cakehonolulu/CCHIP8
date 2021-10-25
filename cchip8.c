@@ -305,79 +305,13 @@ int main(int argc, char **argv)
 						break;
 					}
 
-					switch(m_event.key.keysym.sym)
+					for (int i = 0; i < 16; i++)
 					{
-						// List of keys can be found at https://www.libsdl.org/release/SDL-1.2.15/docs/html/sdlkey.html
-						// TODO: There's probably a better way of doing this, maybe using a function that interprets input?
-						case SDLK_1:
-								chip8.m_keyboard[0x0] = 1;
-								break;
-	
-						case SDLK_2:
-								chip8.m_keyboard[0x1] = 1;
-								break;
-
-						case SDLK_3:
-								chip8.m_keyboard[0x2] = 1;
-								break;
-
-						case SDLK_4:
-								chip8.m_keyboard[0x3] = 1;
-								break;
-
-						case SDLK_q:
-								chip8.m_keyboard[0x4] = 1;
-								break;
-
-						case SDLK_w:
-								chip8.m_keyboard[0x5] = 1;
-								break;
-
-						case SDLK_e:
-								chip8.m_keyboard[0x6] = 1;
-								break;
-
-						case SDLK_r:
-								chip8.m_keyboard[0x7] = 1;
-								break;
-
-						case SDLK_a:
-								chip8.m_keyboard[0x8] = 1;
-								break;
-
-						case SDLK_s:
-								chip8.m_keyboard[0x9] = 1;
-								break;
-
-						case SDLK_d:
-								chip8.m_keyboard[0xA] = 1;
-								break;
-
-						case SDLK_f:
-								chip8.m_keyboard[0xB] = 1;
-								break;
-
-						case SDLK_z:
-								chip8.m_keyboard[0xC] = 1;
-								break;
-
-						case SDLK_x:
-								chip8.m_keyboard[0xD] = 1;
-								break;
-
-						case SDLK_c:
-								chip8.m_keyboard[0xE] = 1;
-								break;
-
-						case SDLK_v:
-								chip8.m_keyboard[0xF] = 1;
-								break;
-
-						// End with a default at the end of the switch() statement
-						default:
-							break;
-					}
-					// End m_event.key.keysym.sym switch() statement
+						if (m_event.key.keysym.sym == m_sdl_keys[i])
+						{
+							chip8.m_keyboard[i] = 1;
+						}
+            		}
 
 					// End case SDL_KEYDOWN
 					break;
@@ -386,75 +320,13 @@ int main(int argc, char **argv)
 					// Check if debug mode isn't enabled
 					if (m_dbgmode == false)
 					{
-						switch(m_event.key.keysym.sym)
+						for (int i = 0; i < 16; i++)
 						{
-							case SDLK_1:
-								chip8.m_keyboard[0x0] = 0;
-								break;
-
-							case SDLK_2:
-								chip8.m_keyboard[0x1] = 0;
-								break;
-
-							case SDLK_3:
-								chip8.m_keyboard[0x2] = 0;
-								break;
-
-							case SDLK_4:
-								chip8.m_keyboard[0x3] = 0;
-								break;
-
-							case SDLK_q:
-								chip8.m_keyboard[0x4] = 0;
-								break;
-
-							case SDLK_w:
-								chip8.m_keyboard[0x5] = 0;
-								break;
-
-							case SDLK_e:
-								chip8.m_keyboard[0x6] = 0;
-								break;
-
-							case SDLK_r:
-								chip8.m_keyboard[0x7] = 0;
-								break;
-
-							case SDLK_a:
-								chip8.m_keyboard[0x8] = 0;
-								break;
-
-							case SDLK_s:
-								chip8.m_keyboard[0x9] = 0;
-								break;
-
-							case SDLK_d:
-								chip8.m_keyboard[0xA] = 0;
-								break;
-
-							case SDLK_f:
-								chip8.m_keyboard[0xB] = 0;
-								break;
-
-							case SDLK_z:
-								chip8.m_keyboard[0xC] = 0;
-								break;
-
-							case SDLK_x:
-								chip8.m_keyboard[0xD] = 0;
-								break;
-
-							case SDLK_c:
-								chip8.m_keyboard[0xE] = 0;
-								break;
-
-							case SDLK_v:
-								chip8.m_keyboard[0xF] = 0;
-								break;
-
-							default:
-								break;
-						}	// End switch statement
+							if (m_event.key.keysym.sym == SDL_Keys[i])
+							{
+								chip8.m_keyboard[i] = 0;
+							}
+						}
 					}
 					// End if m_dbgmode... statement
 					break;

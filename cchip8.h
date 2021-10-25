@@ -12,6 +12,8 @@
 
 #define CHIP8_FONT_SIZE 80
 
+#define CHIP8_KEYS 16
+
 #define CHIP8_COLUMNS 64
 #define CHIP8_ROWS 32
 
@@ -37,6 +39,25 @@ static const unsigned char m_font[CHIP8_FONT_SIZE] = {
 	0xE0, 0x90, 0x90, 0x90, 0xE0, // D
 	0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+};
+
+static const uint8_t m_sdl_keys[CHIP8_KEYS] = {
+    SDLK_1, // 0
+    SDLK_2, // 1
+    SDLK_3, // 2
+    SDLK_4, // 3
+    SDLK_q, // 4
+    SDLK_w, // 5
+    SDLK_e, // 6
+    SDLK_r, // 7
+    SDLK_a, // 8
+    SDLK_s, // 9
+    SDLK_d, // A
+    SDLK_f, // B
+    SDLK_z, // C
+    SDLK_x, // D
+    SDLK_c, // E
+    SDLK_v  // F
 };
 
 typedef struct chip8
@@ -65,7 +86,7 @@ typedef struct chip8
 	// CHIP8 has 16 total keyboard keys
 	// Declare an array containing 16 entries
 	// to manage keyboard inputs
-	int m_keyboard[16];
+	int m_keyboard[CHIP8_KEYS];
 
 	// CHIP8 - Output
 	// CHIP8 has a (row:col) 64 by 32 pixel buffer
