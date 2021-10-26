@@ -416,12 +416,12 @@ void m_exec(m_chip8 *chip8)
 		case 0xC000:
 			/*
 				Set V(x) register to the result of an AND Bitwise operation that consists of
-				getting the modulo of 100 of the random number (Result: 2 numbers) and AND-ing
+				getting the modulo of 0x100 (256) of the random number (Result: 2 numbers) and AND-ing
 				that to the NN number specified by the opcode.
 
-				We modulo by 100 to get a two digit number residue (Which lands between 0 and 255)
+				We modulo by 0x100 to get a two digit number residue (Which lands between 0 and 255)
 			*/
-			REGS[M_OPC_0X00(M_OPCODE)] = (rand() % (100)) & M_GET_NN_FROM_OPCODE(M_OPCODE);
+			REGS[M_OPC_0X00(M_OPCODE)] = (rand() % (0x100)) & M_GET_NN_FROM_OPCODE(M_OPCODE);
 			// Increment PC by 2
             PC += 2;
             break;
