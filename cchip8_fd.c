@@ -548,6 +548,17 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
                     break;
 
+                /*
+					FX1E:
+					Adds VX to I. VF is not affected.
+				*/
+                case 0x000E:
+                	// Add V(x) to the Index Register
+                	I += REGS[M_OPC_0X00(M_OPCODE)];
+                	// Increment PC by 2
+                	PC += 2;
+                	break;
+
 				/*
 					FX29:
 					Sets I to the location of the sprite for the character in VX.
