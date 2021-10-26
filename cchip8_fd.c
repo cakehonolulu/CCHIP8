@@ -205,7 +205,7 @@ void m_exec(m_chip8 *chip8)
 			printf("ANNN (%x) [NNN -> 0x%x]\n", 
 				M_GET_NNN_FROM_OPCODE(M_OPCODE), M_GET_NNN_FROM_OPCODE(M_OPCODE));
 #endif
-			chip8->m_index = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			I = M_GET_NNN_FROM_OPCODE(M_OPCODE);
 			PC += 2;
 			break;
 
@@ -239,7 +239,7 @@ void m_exec(m_chip8 *chip8)
 
 			for (int i = 0; i < ht; i++)
             {
-                int pixel = RAM[chip8->m_index + i];
+                int pixel = RAM[I + i];
                 for (int j = 0; j < wt; j++)
                 {
                     if ((pixel & (0x80 >> j)) != 0)
@@ -303,7 +303,7 @@ void m_exec(m_chip8 *chip8)
 					Characters 0-F (in hexadecimal) are represented by a 4x5 font.
 				*/
 				case 0x0029:
-    					chip8->m_index = (REGS[M_OPC_0X00(M_OPCODE)] * 0x5);
+    					I = (REGS[M_OPC_0X00(M_OPCODE)] * 0x5);
     					PC += 2;
     					break;
 				/*
@@ -318,17 +318,17 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("FX33 Opcode!\n"); 
 #endif
-    				RAM[chip8->m_index] = REGS[M_OPC_0X00(M_OPCODE)] / 100;
+    				RAM[I] = REGS[M_OPC_0X00(M_OPCODE)] / 100;
 #ifdef DEBUG
-					printf("idx (%d)\n", RAM[chip8->m_index]); 
+					printf("idx (%d)\n", RAM[I]); 
 #endif
-    				RAM[chip8->m_index + 1] = (REGS[M_OPC_0X00(M_OPCODE)] / 10) % 10;
+    				RAM[I + 1] = (REGS[M_OPC_0X00(M_OPCODE)] / 10) % 10;
 #ifdef DEBUG
-					printf("idx+1 (%d)\n", RAM[chip8->m_index + 1]);
+					printf("idx+1 (%d)\n", RAM[I + 1]);
 #endif
-    				RAM[chip8->m_index + 2] = (REGS[M_OPC_0X00(M_OPCODE)] % 100) % 10;
+    				RAM[I + 2] = (REGS[M_OPC_0X00(M_OPCODE)] % 100) % 10;
 #ifdef DEBUG
-					printf("idx+2 (%d)\n", RAM[chip8->m_index + 2]);
+					printf("idx+2 (%d)\n", RAM[I + 2]);
 #endif
 					PC += 2;
 					break;
@@ -349,7 +349,7 @@ void m_exec(m_chip8 *chip8)
 					*/
 					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); m_currentregister++)
 					{
-						REGS[m_currentregister] = RAM[chip8->m_index + m_currentregister];
+						REGS[m_currentregister] = RAM[I + m_currentregister];
 					}
 
 					// Increase the program counter by 2
