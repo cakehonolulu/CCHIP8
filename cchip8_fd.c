@@ -147,12 +147,17 @@ void m_exec(m_chip8 *chip8)
 
 			break;
 
-		case 0x6000: // [6XNN] Sets Vx to NN
+		/*
+			6XNN:
+			Set VX to NN
+		*/
+		case 0x6000:
 #ifdef DEBUG
 			printf("6XNN (%x) [NN -> 0x%x]\n", M_OPCODE, M_OPCODE & 0x00FF);
 #endif
-			REGS[M_OPC_0X00(M_OPCODE)] =
-				M_OPCODE & 0x00FF;
+			// Get NN from current opcode and store it into registers[x]
+			REGS[M_OPC_0X00(M_OPCODE)] = M_OPCODE & 0x00FF;
+			// Increment PC by 2
 			PC += 2;
 			break;
 
