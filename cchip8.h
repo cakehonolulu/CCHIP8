@@ -131,6 +131,7 @@ typedef struct chip8
 #define PC (chip8->m_programcounter)
 #define SP (chip8->m_stackp)
 #define SS (chip8->m_stack)
+#define RAM (chip8->m_memory)
 
 void m_exec(m_chip8 *chip8);
 
