@@ -197,8 +197,14 @@ void m_exec(m_chip8 *chip8)
 			// Determine which opcode we're dealing with based on last digit
 			switch (M_OPCODE & 0x000F)
 			{
+				/*
+					8XY0:
+					Set Vx to the value of Vy
+				*/
 				case 0x0000:
-                    REGS[M_OPC_0X00(M_OPCODE)] = REGS[(M_OPCODE & 0x00F0) >> 4];
+					// Find V(x) register and set it to V(y)'s value
+                    REGS[M_OPC_0X00(M_OPCODE)] = REGS[M_OPC_00X0(M_OPCODE)];
+                    // Increment PC by 2
                     PC += 2;
                     break;
 
