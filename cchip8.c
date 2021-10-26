@@ -38,6 +38,8 @@ int main(int argc, char **argv)
 	const char *m_filename = NULL;
 
 #ifdef __unix__
+	bool m_foundrom = false;
+
 	for (int i = 1; i < argc; i++)
 	{
 		if ((strcmp(argv[i], "-d") == 0) || (strcmp(argv[i], "-D") == 0))
@@ -46,15 +48,23 @@ int main(int argc, char **argv)
 		} else if (strcmp(argv[i], "-no-exit") == 0)
 		{
 			m_no_exit = true;
-		} else if ((strstr(argv[i], ".ch8") != NULL) || (strstr(argv[i], ".rom") != NULL))
+		} else if (m_foundrom != true)
 		{
-			m_filename = argv[i];
-
-			// Don't accept more files
-			break;
+			if ((strstr(argv[i], ".ch8") != NULL) || (strstr(argv[i], ".rom") != NULL))
+			{
+				m_filename = argv[i];
+				m_foundrom = true;
+				
+			}
 		} else {
-			printf("Unknown argument: %s\n", argv[i]);
-			exit(EXIT_FAILURE);
+			if (m_foundrom == true)
+			{
+				printf("No more than 1 ROM file is allowed, exiting...\n");
+				exit(EXIT_FAILURE);
+			} else {
+				printf("Unknown argument: %s\n", argv[i]);
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 
