@@ -501,6 +501,9 @@ void m_exec(m_chip8 *chip8)
 			}
 			break;
 
+		/*
+			0xF000 opcode subfamily
+		*/
 		case 0xF000:
 			switch (M_OPCODE & 0x00FF)
 			{
