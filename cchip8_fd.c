@@ -241,12 +241,27 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
 					break;
 
+				/*
+					8XY4:
+					Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there is not.
+				*/
 				case 0x0004:
-					REGS[M_OPC_0X00(M_OPCODE)] += REGS[(M_OPCODE & 0x00F0) >> 4];
-                    if(REGS[(M_OPCODE & 0x00F0) >> 4] > (0xFF - REGS[(M_OPCODE & 0x0F00) >> 8]))
-                        REGS[0xF] = 1;
+					// Find V(x) register value, add V(y) value to it
+					REGS[M_OPC_0X00(M_OPCODE)] += REGS[M_OPC_00X0(M_OPCODE)];
+
+					// Sum V(x) and V(y)
+					uint16_t m_add = REGS[M_OPC_0X00(M_OPCODE)] + REGS[M_OPC_00X0(M_OPCODE)];
+
+					/*
+						Check if the addition overflowed
+						If it overflowed, set VF (Flag Register) to 1, else to 0
+					*/
+                    if(m_add > UCHAR_MAX)
+                        REGS[VF] = 1;
                     else
-                        REGS[0xF] = 0;
+                        REGS[VF] = 0;
+
+                    // Increment PC by 2
                     PC += 2;
 					break;
 
