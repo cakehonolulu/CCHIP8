@@ -19,21 +19,29 @@ void m_exec(m_chip8 *chip8)
 	printf("opcode: 0x%x\n", m_opcode);
 #endif
 
-	if (m_opcode == 0xe0)
-	{
-		for (int i = 0; i < 2048; ++i)
-					{
-                        chip8->m_display[i] = 0;
-                    }
-                    chip8->m_redraw = true;
-                    chip8->m_programcounter += 2;
-	}
-
 	switch(m_opcode & 0xF000)
 	{
 		case 0x0000:
 			switch (m_opcode & 0x00FF)
 			{
+				/*
+					00E0:
+					Clear the screen
+				*/
+				case 0x00E0:
+					// Set each display pixel to 0 (Black)
+					for (int i = 0; i < (CHIP8_ROWS * CHIP8_COLUMNS); ++i)
+					{
+                        chip8->m_display[i] = 0;
+                    }
+
+                    // Redraw the entire screen with black pixels
+                    chip8->m_redraw = true;
+
+                    // Increment the Program Counter Register
+                    chip8->m_programcounter += 2;
+                    break;
+
 				case 0x00EE:
 					// TODO: Stack push-pop function to simplify the code
 					chip8->m_stackp--;
