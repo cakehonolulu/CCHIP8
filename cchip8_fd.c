@@ -78,10 +78,10 @@ void m_exec(m_chip8 *chip8)
 
 				Set the program counter to the address NNN found in the current opcode.
 			*/
-			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
+			chip8->m_programcounter = M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode);
 
 #ifdef DEBUG
-			printf("Jumping to 0x%x\n", chip8->m_currentopcode & 0x0FFF);
+			printf("Jumping to 0x%x\n", M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode));
 #endif
 
 			break;
@@ -93,7 +93,7 @@ void m_exec(m_chip8 *chip8)
 		case 0x2000:
 
 #ifdef DEBUG
-			printf("2NNN (%x) [NNN -> 0x%x]\n", chip8->m_currentopcode, chip8->m_currentopcode & 0x0FFF);
+			printf("2NNN (%x) [NNN -> 0x%x]\n", chip8->m_currentopcode, M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode));
 			printf("2NNN -> PC: 0x%x\n", chip8->m_programcounter);
 #endif
 			/*
@@ -111,7 +111,7 @@ void m_exec(m_chip8 *chip8)
 			chip8->m_stackp++;
 
 			// Set the program counter to the address provided by the opcode
-			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
+			chip8->m_programcounter = M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode);
 
 #ifdef DEBUG
 			printf("2NNN Jumped to: 0x%x\n", chip8->m_programcounter);
@@ -204,9 +204,9 @@ void m_exec(m_chip8 *chip8)
 		case 0xA000: // [ANNN] Sets I to the address NNN
 #ifdef DEBUG
 			printf("ANNN (%x) [NNN -> 0x%x]\n", 
-				chip8->m_currentopcode & 0x0FFF, chip8->m_currentopcode & 0x0FFF);
+				M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode), M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode));
 #endif
-			chip8->m_index = chip8->m_currentopcode & 0x0FFF;
+			chip8->m_index = M_GET_NNN_FROM_OPCODE(chip8->m_currentopcode);
 			chip8->m_programcounter += 2;
 			break;
 
