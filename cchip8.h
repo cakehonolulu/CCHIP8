@@ -73,10 +73,32 @@ static const uint8_t m_sdl_keys[CHIP8_KEYS] = {
     SDLK_v  // F
 };
 
+enum m_allreg
+{
+	V0 = 0x0,
+	V1 = 0x1,
+	V2 = 0x2,
+	V3 = 0x3,
+	V4 = 0x4,
+	V5 = 0x5,
+	V6 = 0x6,
+	V7 = 0x7,
+	V8 = 0x8,
+	V9 = 0x9,
+	VA = 0xA,
+	VB = 0xB,
+	VC = 0xC,
+	VD = 0xD,
+	VE = 0xE,
+	VF = 0xF
+};
+
 typedef struct chip8
 {
 	// CHIP8 - Arithmetic Registers
 	uint8_t m_registers[CHIP8_REGISTERS];
+
+	enum m_allreg m_regnames;
 
 	// CHIP8 - Index Register
 	uint16_t m_index;
