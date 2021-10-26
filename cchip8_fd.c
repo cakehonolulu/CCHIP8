@@ -194,6 +194,7 @@ void m_exec(m_chip8 *chip8)
 			0x8000 opcode subfamily
 		*/
 		case 0x8000:
+			// Determine which opcode we're dealing with based on last digit
 			switch (M_OPCODE & 0x000F)
 			{
 				case 0x0000:
