@@ -53,7 +53,7 @@ void m_exec(m_chip8 *chip8)
 					SP--;
 
 					// Set the program counter to the stack value pointed by stack pointer
-					PC = chip8->m_stack[SP];
+					PC = SS[SP];
 
 					// Increase the Program Counter by 2 (Returning effectively from the subroutine)
 					PC += 2;
@@ -105,7 +105,7 @@ void m_exec(m_chip8 *chip8)
 			// TODO: Stack push-pop function to simplify the code
 
 			// Push the current program counter to the stack at current stack pointer position
-			chip8->m_stack[SP] = PC;
+			SS[SP] = PC;
 
 			// Increase the stack pointer by 1
 			SP++;
