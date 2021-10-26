@@ -371,6 +371,20 @@ void m_exec(m_chip8 *chip8)
 
 			break;
 
+		/*
+			9XY0:
+			Skips the next instruction if VX does not equal VY.
+		*/
+		case 0x9000:
+			// Check if V(x) != V(y)
+			if ((REGS[M_OPC_0X00(M_OPCODE)]) != (REGS[M_OPC_00X0(M_OPCODE)]))
+				// If they're not equal, skip 1 instruction
+				PC += 4;
+			else
+				// Increment PC by 2
+				PC += 2;
+			break;
+
 		case 0xA000: // [ANNN] Sets I to the address NNN
 #ifdef DEBUG
 			printf("ANNN (%x) [NNN -> 0x%x]\n", 
