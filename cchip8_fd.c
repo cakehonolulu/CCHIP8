@@ -552,7 +552,7 @@ void m_exec(m_chip8 *chip8)
 					FX1E:
 					Adds VX to I. VF is not affected.
 				*/
-                case 0x000E:
+                case 0x001E:
                 	// Add V(x) to the Index Register
                 	I += REGS[M_OPC_0X00(M_OPCODE)];
                 	// Increment PC by 2
