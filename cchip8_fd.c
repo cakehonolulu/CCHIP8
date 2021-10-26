@@ -460,6 +460,9 @@ void m_exec(m_chip8 *chip8)
 			PC += 2;
 			break;
 
+		/*
+			0xE000 opcode subfamily
+		*/
 		case 0xE000:
 			switch (M_OPCODE & 0x00FF)
 			{
