@@ -30,6 +30,7 @@
 #define CHIP8_INITIAL_PC 0x200
 
 #define M_OPC_0X00(x)  ((x & 0x0F00) >> 8)
+#define M_GET_NNN_FROM_OPCODE(x) ((x & 0x0FFF))
 
 // Default CHIP8 font
 static const uint8_t m_font[CHIP8_FONT_SIZE] = {
