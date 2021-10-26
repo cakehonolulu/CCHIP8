@@ -292,6 +292,39 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
                     break;
 
+                /*
+					8XY6:
+					Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
+				*/
+                case 0x0006:
+                	/*
+						What we need to do is store the LSB of V(x) in VF.
+						It's a simple problem.
+						Let's say = REGS[M_OPC_0X00(M_OPCODE) is 0x4 (Base 16)
+						0x4 in binary equals to 0100 (Base 2)
+						If we want to obtain the LSB, we can use a little
+						logic trick, which involves AND-ing 0x1 to the previous value.
+
+						Quick logical tables crash-course:
+						AND Operation: Y = A * B
+						| A | B | Y = A & B	|
+						| 0 | 0 |	  0 	|
+						| 0 | 1 |	  0 	|
+						| 1 | 0 |	  0 	|
+						| 1 | 1 |	  1 	|
+
+						So if we AND 0x1(16) [0001 (2)] to the value, we'll know what
+						the LSB of it looks like.
+                	*/
+                	REGS[VF] = (REGS[M_OPC_0X00(M_OPCODE)] & 0x1);
+
+                	// What's left is bitshifting 1 time to the right V(x) register
+                	REGS[M_OPC_0X00(M_OPCODE)] >>= 1;
+
+                	// Increment PC by 2
+                	PC += 2;
+                    break;
+
 				case 0x0007:
 					if(REGS[M_OPC_0X00(M_OPCODE)] > REGS[(M_OPCODE & 0x00F0) >> 4])
                         REGS[0xF] = 0;
