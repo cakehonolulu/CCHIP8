@@ -483,7 +483,7 @@ int main(int argc, char **argv)
 #ifdef __unix__
 			struct timespec time1, time2;
 			time1.tv_sec = 0;
-			time1.tv_nsec = 15000000;
+			time1.tv_nsec = 1500000;
 			nanosleep(&time1, &time2);
 #endif
 		}
