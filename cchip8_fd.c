@@ -325,13 +325,23 @@ void m_exec(m_chip8 *chip8)
                 	PC += 2;
                     break;
 
-				case 0x0007:
-					if(REGS[M_OPC_0X00(M_OPCODE)] > REGS[(M_OPCODE & 0x00F0) >> 4])
-                        REGS[0xF] = 0;
-                    else
-                        REGS[0xF] = 1;
+                /*
+					8XY7:
+					Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there is not.
 
-                    REGS[M_OPC_0X00(M_OPCODE)] = REGS[(M_OPCODE & 0x00F0) >> 4] - REGS[M_OPC_0X00(M_OPCODE)];
+					Tip: 8XY7 does the opposite of 8XY5
+				*/
+				case 0x0007:
+					// Do the same as 8XY5 but the inverse
+					REGS[M_OPC_0X00(M_OPCODE)] = REGS[M_OPC_00X0(M_OPCODE)] - REGS[M_OPC_0X00(M_OPCODE)];
+
+					// I'll use a different trick that doesn't involve actually substracting
+					if (REGS[M_OPC_00X0(M_OPCODE)] > REGS[M_OPC_0X00(M_OPCODE)])
+                        REGS[VF] = 1;
+                    else
+                        REGS[VF] = 0;
+
+                    // Increment PC by 2
                     PC += 2;
                     break;
 
