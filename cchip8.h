@@ -127,10 +127,19 @@ typedef struct chip8
 
 } m_chip8;
 
+// Current Opcode
 #define M_OPCODE (chip8->m_currentopcode)
+
+// Program Counter Register
 #define PC (chip8->m_programcounter)
+
+// Stack Pointer Register
 #define SP (chip8->m_stackp)
+
+// Stack Segment Register
 #define SS (chip8->m_stack)
+
+// Memory
 #define RAM (chip8->m_memory)
 
 void m_exec(m_chip8 *chip8);
