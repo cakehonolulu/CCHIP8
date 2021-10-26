@@ -130,6 +130,7 @@ typedef struct chip8
 #define M_OPCODE (chip8->m_currentopcode)
 #define PC (chip8->m_programcounter)
 #define SP (chip8->m_stackp)
+#define SS (chip8->m_stack)
 
 void m_exec(m_chip8 *chip8);
 
