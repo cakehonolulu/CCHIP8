@@ -42,10 +42,20 @@ void m_exec(m_chip8 *chip8)
                     chip8->m_programcounter += 2;
                     break;
 
+                /*
+					00EE:
+					Return from a subroutine
+				*/
 				case 0x00EE:
 					// TODO: Stack push-pop function to simplify the code
+
+					// Decrease the stack pointer by 1
 					chip8->m_stackp--;
+
+					// Set the program counter to the stack value pointed by stack pointer
 					chip8->m_programcounter = chip8->m_stack[chip8->m_stackp];
+
+					// Increase the Program Counter by 2 (Returning effectively from the subroutine)
 					chip8->m_programcounter += 2;
 					break;
 			}
