@@ -58,7 +58,13 @@ void m_exec(m_chip8 *chip8)
 					// Increase the Program Counter by 2 (Returning effectively from the subroutine)
 					chip8->m_programcounter += 2;
 					break;
+
+				default:
+					// Break from case 0x00FF
+					break;
 			}
+
+			// Break from case 0x0000
 			break;
 
 		/*
