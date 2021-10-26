@@ -3,8 +3,8 @@
 // Fetch memory and construct the opcode based on the program counter
 uint16_t m_fetch(m_chip8 *chip8)
 {
-	uint16_t m_opcode = (chip8->m_memory[PC]) << 8
-				| (chip8->m_memory[PC + 1]);
+	uint16_t m_opcode = (RAM[PC]) << 8
+				| (RAM[PC + 1]);
 
 	return m_opcode;
 }
@@ -239,7 +239,7 @@ void m_exec(m_chip8 *chip8)
 
 			for (int i = 0; i < ht; i++)
             {
-                int pixel = chip8->m_memory[chip8->m_index + i];
+                int pixel = RAM[chip8->m_index + i];
                 for (int j = 0; j < wt; j++)
                 {
                     if ((pixel & (0x80 >> j)) != 0)
@@ -318,17 +318,17 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("FX33 Opcode!\n"); 
 #endif
-    				chip8->m_memory[chip8->m_index] = chip8->m_registers[M_OPC_0X00(M_OPCODE)] / 100;
+    				RAM[chip8->m_index] = chip8->m_registers[M_OPC_0X00(M_OPCODE)] / 100;
 #ifdef DEBUG
-					printf("idx (%d)\n", chip8->m_memory[chip8->m_index]); 
+					printf("idx (%d)\n", RAM[chip8->m_index]); 
 #endif
-    				chip8->m_memory[chip8->m_index + 1] = (chip8->m_registers[M_OPC_0X00(M_OPCODE)] / 10) % 10;
+    				RAM[chip8->m_index + 1] = (chip8->m_registers[M_OPC_0X00(M_OPCODE)] / 10) % 10;
 #ifdef DEBUG
-					printf("idx+1 (%d)\n", chip8->m_memory[chip8->m_index + 1]);
+					printf("idx+1 (%d)\n", RAM[chip8->m_index + 1]);
 #endif
-    				chip8->m_memory[chip8->m_index + 2] = (chip8->m_registers[M_OPC_0X00(M_OPCODE)] % 100) % 10;
+    				RAM[chip8->m_index + 2] = (chip8->m_registers[M_OPC_0X00(M_OPCODE)] % 100) % 10;
 #ifdef DEBUG
-					printf("idx+2 (%d)\n", chip8->m_memory[chip8->m_index + 2]);
+					printf("idx+2 (%d)\n", RAM[chip8->m_index + 2]);
 #endif
 					PC += 2;
 					break;
@@ -349,7 +349,7 @@ void m_exec(m_chip8 *chip8)
 					*/
 					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); m_currentregister++)
 					{
-						chip8->m_registers[m_currentregister] = chip8->m_memory[chip8->m_index + m_currentregister];
+						chip8->m_registers[m_currentregister] = RAM[chip8->m_index + m_currentregister];
 					}
 
 					// Increase the program counter by 2
