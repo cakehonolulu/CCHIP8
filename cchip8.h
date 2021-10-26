@@ -127,6 +127,8 @@ typedef struct chip8
 
 } m_chip8;
 
+#define M_OPCODE (chip8->m_currentopcode)
+
 void m_exec(m_chip8 *chip8);
 
 // SDL2 Icon using RAW Data Method by blog.gibson.sh
