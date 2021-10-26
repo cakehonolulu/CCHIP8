@@ -148,6 +148,21 @@ void m_exec(m_chip8 *chip8)
 			break;
 
 		/*
+			5XY0:
+			Skip the next instruction if Vx = Vy
+		*/
+		// Tip: The easiest of all the 3XNN-4XNN-5XNN series, checks if Vx and Vy are the same
+		case 0x5000:
+			if (REGS[M_OPC_0X00(M_OPCODE)] == REGS[M_OPC_00X0(M_OPCODE)])
+				// Check if X register doesn't contain NN bytes
+				PC += 4;
+			else
+				// Else, increment PC by 2
+				PC += 2;
+
+			break;
+
+		/*
 			6XNN:
 			Set VX to NN
 		*/
