@@ -142,6 +142,9 @@ typedef struct chip8
 // Memory
 #define RAM (chip8->m_memory)
 
+// Registers
+#define REGS (chip8->m_registers)
+
 void m_exec(m_chip8 *chip8);
 
 // SDL2 Icon using RAW Data Method by blog.gibson.sh
