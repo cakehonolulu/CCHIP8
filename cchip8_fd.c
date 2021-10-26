@@ -284,9 +284,9 @@ void m_exec(m_chip8 *chip8)
 						if x1 > x2; (x1 - x2) > 0 there's no borrow, else, there is
 					*/
 					if (REGS[M_OPC_0X00(M_OPCODE)] > REGS[M_OPC_00X0(M_OPCODE)])
-                        REGS[VF] = 1;
-                    else
                         REGS[VF] = 0;
+                    else
+                        REGS[VF] = 1;
 
                     // Increment PC by 2
                     PC += 2;
