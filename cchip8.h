@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// For UCHAR_MAX
+#include <limits.h>
+
 #ifdef __unix__
 #include <time.h>
 #endif
