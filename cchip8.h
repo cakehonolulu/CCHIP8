@@ -139,6 +139,9 @@ typedef struct chip8
 // Stack Segment Register
 #define SS (chip8->m_stack)
 
+// Index Register
+#define I (chip8->m_index)
+
 // Memory
 #define RAM (chip8->m_memory)
 
