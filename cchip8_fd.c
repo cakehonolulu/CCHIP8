@@ -467,6 +467,22 @@ void m_exec(m_chip8 *chip8)
 			switch (M_OPCODE & 0x00FF)
 			{
 				/*
+					EX9E:
+					Skips the next instruction if the key stored in VX is pressed.
+
+					Tip: Inverse of EXA1
+				*/
+				case 0x00A1:
+					// Check if the V(x) pointer to the keyboard array equals to 1 (Key pressed)
+					if (chip8->m_keyboard[REGS[M_OPC_0X00(M_OPCODE)]] == 1)
+						// Skip 1 instruction
+                        PC +=  4;
+                    else
+                    	// Increment PC by 2
+                        PC += 2;
+                    break;
+					
+				/*
 					EXA1:
 					Skips the next instruction if the key stored in VX is not pressed.
 				*/
