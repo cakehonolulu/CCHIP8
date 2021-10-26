@@ -472,7 +472,7 @@ void m_exec(m_chip8 *chip8)
 
 					Tip: Inverse of EXA1
 				*/
-				case 0x00A1:
+				case 0x009E:
 					// Check if the V(x) pointer to the keyboard array equals to 1 (Key pressed)
 					if (chip8->m_keyboard[REGS[M_OPC_0X00(M_OPCODE)]] == 1)
 						// Skip 1 instruction
@@ -515,6 +515,23 @@ void m_exec(m_chip8 *chip8)
 				case 0x0007:
 					REGS[M_OPC_0X00(M_OPCODE)] = chip8->m_delaytmr;
                     PC += 2;
+					break;
+
+				/*
+					FX0A:
+					A key press is awaited, and then stored in VX.
+				*/
+				case 0x000A:
+					for (int i = 0; i < CHIP8_KEYS; i++)
+					{
+						if (chip8->m_keyboard[i] != 0)
+						{
+							REGS[M_OPC_0X00(M_OPCODE)] = i;
+							PC += 2;
+							break;
+						}
+					}
+
 					break;
 
 				/*
