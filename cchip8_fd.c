@@ -209,6 +209,17 @@ void m_exec(m_chip8 *chip8)
                     break;
 
                 /*
+                	8XY1:
+					Sets VX to VX or VY. (Bitwise OR operation)
+                */
+                case 0x0001:
+                	// Find V(x) register value, OR-it to V(y) register and save it to V(x)
+					REGS[M_OPC_0X00(M_OPCODE)] |= REGS[M_OPC_00X0(M_OPCODE)];
+					// Increment PC by 2
+                    PC += 2;
+                	break;
+
+                /*
 					8XY2:
 					Sets VX to VX and VY. (Bitwise AND operation)
 				*/
