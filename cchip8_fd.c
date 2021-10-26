@@ -255,6 +255,11 @@ void m_exec(m_chip8 *chip8)
 					/*
 						Check if the addition overflowed
 						If it overflowed, set VF (Flag Register) to 1, else to 0
+						Remember, unsigned chars are 8 bit values, that means
+						that the maximum integer they can hold is 255.
+						We'll use a 16-bit wide variable (unsigned short) to
+						perform an addition and compare it against UCHAR_MAX
+						to decide wether to flip VF or not.
 					*/
                     if(m_add > UCHAR_MAX)
                         REGS[VF] = 1;
