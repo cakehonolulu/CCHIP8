@@ -48,6 +48,9 @@ int main(int argc, char **argv)
 		} else if ((strstr(argv[i], ".ch8") != NULL) || (strstr(argv[i], ".rom") != NULL))
 		{
 			m_filename = argv[i];
+
+			// Don't accept more files
+			break;
 		} else {
 			printf("Unknown argument: %s\n", argv[i]);
 			exit(EXIT_FAILURE);
