@@ -234,6 +234,9 @@ void m_exec(m_chip8 *chip8)
                     REGS[M_OPC_0X00(M_OPCODE)] = REGS[(M_OPCODE & 0x00F0) >> 4] - REGS[M_OPC_0X00(M_OPCODE)];
                     PC += 2;
                     break;
+
+                default:
+                	break;
 			}
 
 			break;
