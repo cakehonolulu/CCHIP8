@@ -345,6 +345,26 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
                     break;
 
+                /*
+					8XYE:
+					Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
+
+					Tip: It's almost the same as 8XY6 but kinda the opposite
+				*/
+                case 0x000E:
+                	/*
+                		Instead of ANDing 0x1(16) [0001(2)], we and 0xF(16) [1111(2)]
+                		to get the MSB of the operand
+                	*/
+                	REGS[VF] = (REGS[M_OPC_0X00(M_OPCODE)] & 0xF);
+
+                	// What's left is bitshifting 1 time to the left V(x) register
+                	REGS[M_OPC_0X00(M_OPCODE)] <<= 1;
+
+                	// Increment PC by 2
+                	PC += 2;
+                    break;
+
                 default:
                 	break;
 			}
