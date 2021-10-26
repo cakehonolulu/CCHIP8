@@ -479,6 +479,9 @@ void m_exec(m_chip8 *chip8)
                     	// Increment PC by 2
                         PC += 2;
                     break;
+
+                default:
+                	break;
 			}
 			break;
 
