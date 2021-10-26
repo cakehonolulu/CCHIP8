@@ -230,6 +230,17 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
 					break;
 
+				/*
+					8XY2:
+					Sets VX to VX xor VY.
+				*/
+				case 0x0003:
+					// Find V(x) register value, AND-it to V(y) register and save it to V(x)
+					REGS[M_OPC_0X00(M_OPCODE)] ^= REGS[M_OPC_00X0(M_OPCODE)];
+					// Increment PC by 2
+                    PC += 2;
+					break;
+
 				case 0x0004:
 					REGS[M_OPC_0X00(M_OPCODE)] += REGS[(M_OPCODE & 0x00F0) >> 4];
                     if(REGS[(M_OPCODE & 0x00F0) >> 4] > (0xFF - REGS[(M_OPCODE & 0x0F00) >> 8]))
