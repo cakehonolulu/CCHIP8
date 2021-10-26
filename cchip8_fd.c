@@ -261,7 +261,7 @@ void m_exec(m_chip8 *chip8)
 						perform an addition and compare it against UCHAR_MAX
 						to decide wether to flip VF or not.
 					*/
-                    if(m_add > UCHAR_MAX)
+                    if (m_add > UCHAR_MAX)
                         REGS[VF] = 1;
                     else
                         REGS[VF] = 0;
