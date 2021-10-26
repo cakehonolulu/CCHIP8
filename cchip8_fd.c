@@ -401,6 +401,15 @@ void m_exec(m_chip8 *chip8)
 			break;
 
 		/*
+			BNNN:
+			Jumps to the address NNN plus V0.
+		*/
+		case 0xB000:
+			// Set program counter to the address specified by opcode (NNN) plus V0 Register
+			PC = M_GET_NNN_FROM_OPCODE(M_OPCODE) + REGS[V0]; 
+			break;
+
+		/*
 			CXNN:
 			Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
 		*/
