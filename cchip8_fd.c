@@ -181,7 +181,9 @@ void m_exec(m_chip8 *chip8)
 			Adds NN to VX. (Carry flag is not changed);
 		*/
 		case 0x7000:
+			// Calculate Vx and add it NN (NN from Current Opcode)
 			REGS[M_OPC_0X00(M_OPCODE)] += M_OPCODE & 0x00FF;
+			// Increment PC by 2
 			PC += 2;
 			break;
 
