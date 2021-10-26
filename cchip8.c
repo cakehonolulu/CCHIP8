@@ -429,7 +429,10 @@ int main(int argc, char **argv)
 			usleep(1500);
 #endif
 #ifdef __unix__
-			usleep(1500);
+			struct timespec time1, time2;
+			time1.tv_sec = 0;
+			time1.tv_nsec = 15000000;
+			nanosleep(&time1, &time2);
 #endif
 		}
 	}

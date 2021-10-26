@@ -5,7 +5,7 @@
 #include <string.h>
 
 #ifdef __unix__
-#include <unistd.h>
+#include <time.h>
 #endif
 
 #include <SDL2/SDL.h>
