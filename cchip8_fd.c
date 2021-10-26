@@ -74,12 +74,16 @@ void m_exec(m_chip8 *chip8)
 		case 0x1000:
 			/*
 				Do the same as 2NNN but don't touch the stack, as this is a jump, not a subroutine call where
-				we need to push the return address to the stack
+				we need to push the return address to the stack.
+
+				Set the program counter to the address NNN found in the current opcode.
 			*/
 			chip8->m_programcounter = chip8->m_currentopcode & 0x0FFF;
+
 #ifdef DEBUG
 			printf("Jumping to 0x%x\n", chip8->m_currentopcode & 0x0FFF);
 #endif
+
 			break;
 
 		case 0x2000: // [2NNN] Cals subroutine at NNN
