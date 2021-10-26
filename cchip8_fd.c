@@ -119,14 +119,16 @@ void m_exec(m_chip8 *chip8)
 
 		/*
 			3XNN:
-			Skips the next instruction if VX equals NN. (Usually the next instruction is a jump to skip a code block);
+			Skips the next instruction if Vx equals to NN
 		*/
 		case 0x3000:
+			// Check if X register contains NN bytes
 			if (REGS[M_OPC_0X00(M_OPCODE)] == (M_OPCODE & 0x00FF))
+				// If true, increment PC by 4
                 PC += 4;
             else
+            	// Else, increment PC by 2
                 PC += 2;
-
             break;
 
         case 0x4000:
