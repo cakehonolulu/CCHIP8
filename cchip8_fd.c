@@ -131,10 +131,18 @@ void m_exec(m_chip8 *chip8)
                 PC += 2;
             break;
 
+        /*
+			4XNN:
+			Skips the next instruction if Vx is not equal to NN
+		*/
+        // Tip: It's the inverse of 3XNN
         case 0x4000:
+			// Check if X register doesn't contain NN bytes
 			if (REGS[M_OPC_0X00(M_OPCODE)] != (M_OPCODE & 0x00FF))
+				// If true, increment PC by 4
 				PC += 4;
 			else
+				// Else, increment PC by 2
 				PC += 2;
 
 			break;
