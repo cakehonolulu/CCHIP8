@@ -3,8 +3,8 @@
 // Fetch memory and construct the opcode based on the program counter
 uint16_t m_fetch(m_chip8 *chip8)
 {
-	uint16_t m_opcode = (chip8->m_memory[chip8->m_programcounter]) << 8
-				| (chip8->m_memory[chip8->m_programcounter + 1]);
+	uint16_t m_opcode = (chip8->m_memory[PC]) << 8
+				| (chip8->m_memory[PC + 1]);
 
 	return m_opcode;
 }
@@ -39,7 +39,7 @@ void m_exec(m_chip8 *chip8)
                     chip8->m_redraw = true;
 
                     // Increment the Program Counter Register
-                    chip8->m_programcounter += 2;
+                    PC += 2;
                     break;
 
                 /*
@@ -50,13 +50,13 @@ void m_exec(m_chip8 *chip8)
 					// TODO: Stack push-pop function to simplify the code
 
 					// Decrease the stack pointer by 1
-					chip8->m_stackp--;
+					SP--;
 
 					// Set the program counter to the stack value pointed by stack pointer
-					chip8->m_programcounter = chip8->m_stack[chip8->m_stackp];
+					PC = chip8->m_stack[SP];
 
 					// Increase the Program Counter by 2 (Returning effectively from the subroutine)
-					chip8->m_programcounter += 2;
+					PC += 2;
 					break;
 
 				default:
@@ -78,7 +78,7 @@ void m_exec(m_chip8 *chip8)
 
 				Set the program counter to the address NNN found in the current opcode.
 			*/
-			chip8->m_programcounter = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			PC = M_GET_NNN_FROM_OPCODE(M_OPCODE);
 
 #ifdef DEBUG
 			printf("Jumping to 0x%x\n", M_GET_NNN_FROM_OPCODE(M_OPCODE));
@@ -94,7 +94,7 @@ void m_exec(m_chip8 *chip8)
 
 #ifdef DEBUG
 			printf("2NNN (%x) [NNN -> 0x%x]\n", M_OPCODE, M_GET_NNN_FROM_OPCODE(M_OPCODE));
-			printf("2NNN -> PC: 0x%x\n", chip8->m_programcounter);
+			printf("2NNN -> PC: 0x%x\n", PC);
 #endif
 			/*
 				cake (24/10/2021):
@@ -105,16 +105,16 @@ void m_exec(m_chip8 *chip8)
 			// TODO: Stack push-pop function to simplify the code
 
 			// Push the current program counter to the stack at current stack pointer position
-			chip8->m_stack[chip8->m_stackp] = chip8->m_programcounter;
+			chip8->m_stack[SP] = PC;
 
 			// Increase the stack pointer by 1
-			chip8->m_stackp++;
+			SP++;
 
 			// Set the program counter to the address provided by the opcode
-			chip8->m_programcounter = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			PC = M_GET_NNN_FROM_OPCODE(M_OPCODE);
 
 #ifdef DEBUG
-			printf("2NNN Jumped to: 0x%x\n", chip8->m_programcounter);
+			printf("2NNN Jumped to: 0x%x\n", PC);
 #endif
 			break;
 
@@ -124,17 +124,17 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x3000:
 			if (chip8->m_registers[M_OPC_0X00(M_OPCODE)] == (M_OPCODE & 0x00FF))
-                chip8->m_programcounter += 4;
+                PC += 4;
             else
-                chip8->m_programcounter += 2;
+                PC += 2;
 
             break;
 
         case 0x4000:
 			if (chip8->m_registers[M_OPC_0X00(M_OPCODE)] != (M_OPCODE & 0x00FF))
-				chip8->m_programcounter += 4;
+				PC += 4;
 			else
-				chip8->m_programcounter += 2;
+				PC += 2;
 
 			break;
 
@@ -144,7 +144,7 @@ void m_exec(m_chip8 *chip8)
 #endif
 			chip8->m_registers[M_OPC_0X00(M_OPCODE)] =
 				M_OPCODE & 0x00FF;
-			chip8->m_programcounter += 2;
+			PC += 2;
 			break;
 
 		/*
@@ -153,7 +153,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x7000:
 			chip8->m_registers[M_OPC_0X00(M_OPCODE)] += M_OPCODE & 0x00FF;
-			chip8->m_programcounter += 2;
+			PC += 2;
 			break;
 
 		case 0x8000:
@@ -161,12 +161,12 @@ void m_exec(m_chip8 *chip8)
 			{
 				case 0x0000:
                     chip8->m_registers[M_OPC_0X00(M_OPCODE)] = chip8->m_registers[(M_OPCODE & 0x00F0) >> 4];
-                    chip8->m_programcounter += 2;
+                    PC += 2;
                     break;
 
 				case 0x0002:
 					chip8->m_registers[M_OPC_0X00(M_OPCODE)] &= chip8->m_registers[(M_OPCODE & 0x00F0) >> 4];
-                    chip8->m_programcounter += 2;
+                    PC += 2;
 					break;
 
 				case 0x0004:
@@ -175,7 +175,7 @@ void m_exec(m_chip8 *chip8)
                         chip8->m_registers[0xF] = 1;
                     else
                         chip8->m_registers[0xF] = 0;
-                    chip8->m_programcounter += 2;
+                    PC += 2;
 					break;
 
 				case 0x0005:
@@ -185,7 +185,7 @@ void m_exec(m_chip8 *chip8)
                         chip8->m_registers[0xF] = 1;
 
                     chip8->m_registers[M_OPC_0X00(M_OPCODE)] -= chip8->m_registers[(M_OPCODE & 0x00F0) >> 4];
-                    chip8->m_programcounter += 2;
+                    PC += 2;
                     break;
 
 				case 0x0007:
@@ -195,7 +195,7 @@ void m_exec(m_chip8 *chip8)
                         chip8->m_registers[0xF] = 1;
 
                     chip8->m_registers[M_OPC_0X00(M_OPCODE)] = chip8->m_registers[(M_OPCODE & 0x00F0) >> 4] - chip8->m_registers[M_OPC_0X00(M_OPCODE)];
-                    chip8->m_programcounter += 2;
+                    PC += 2;
                     break;
 			}
 
@@ -207,7 +207,7 @@ void m_exec(m_chip8 *chip8)
 				M_GET_NNN_FROM_OPCODE(M_OPCODE), M_GET_NNN_FROM_OPCODE(M_OPCODE));
 #endif
 			chip8->m_index = M_GET_NNN_FROM_OPCODE(M_OPCODE);
-			chip8->m_programcounter += 2;
+			PC += 2;
 			break;
 
 		/*
@@ -216,7 +216,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0xC000:
 			chip8->m_registers[M_OPC_0X00(M_OPCODE)] = (rand() % (0xFF + 1)) & (M_OPCODE & 0x00FF);
-            chip8->m_programcounter += 2;
+            PC += 2;
             break;
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
@@ -256,7 +256,7 @@ void m_exec(m_chip8 *chip8)
             }
 
     		chip8->m_redraw = true;
-			chip8->m_programcounter += 2;
+			PC += 2;
 			break;
 
 		case 0xE000:
@@ -264,9 +264,9 @@ void m_exec(m_chip8 *chip8)
 			{
 				case 0x00A1:
 					if (chip8->m_keyboard[chip8->m_registers[M_OPC_0X00(M_OPCODE)]] == 0)
-                        chip8->m_programcounter +=  4;
+                        PC +=  4;
                     else
-                        chip8->m_programcounter += 2;
+                        PC += 2;
                     break;
 			}
 			break;
@@ -281,7 +281,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0007:
 					chip8->m_registers[M_OPC_0X00(M_OPCODE)] = chip8->m_delaytmr;
-                    chip8->m_programcounter += 2;
+                    PC += 2;
 					break;
 
 				/*
@@ -290,12 +290,12 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0015:
 					chip8->m_delaytmr = chip8->m_registers[M_OPC_0X00(M_OPCODE)];
-                    chip8->m_programcounter += 2;
+                    PC += 2;
                     break;
 
                 case 0x0018:
                 	chip8->m_soundtmr = chip8->m_registers[M_OPC_0X00(M_OPCODE)];
-                    chip8->m_programcounter += 2;
+                    PC += 2;
                     break;
 
 				/*
@@ -305,7 +305,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0029:
     					chip8->m_index = (chip8->m_registers[M_OPC_0X00(M_OPCODE)] * 0x5);
-    					chip8->m_programcounter += 2;
+    					PC += 2;
     					break;
 				/*
 					FX33:
@@ -331,7 +331,7 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("idx+2 (%d)\n", chip8->m_memory[chip8->m_index + 2]);
 #endif
-					chip8->m_programcounter += 2;
+					PC += 2;
 					break;
 				
 				/*
@@ -354,7 +354,7 @@ void m_exec(m_chip8 *chip8)
 					}
 
 					// Increase the program counter by 2
-					chip8->m_programcounter += 2;
+					PC += 2;
 				}
 
 			break;
