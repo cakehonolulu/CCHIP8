@@ -208,8 +208,14 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
                     break;
 
+                /*
+					8XY2:
+					Sets VX to VX and VY. (Bitwise AND operation)
+				*/
 				case 0x0002:
-					REGS[M_OPC_0X00(M_OPCODE)] &= REGS[(M_OPCODE & 0x00F0) >> 4];
+					// Find V(x) register value, AND-it to V(y) register and save it to V(x)
+					REGS[M_OPC_0X00(M_OPCODE)] &= REGS[M_OPC_00X0(M_OPCODE)];
+					// Increment PC by 2
                     PC += 2;
 					break;
 
