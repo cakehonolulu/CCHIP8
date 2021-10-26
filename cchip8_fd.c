@@ -126,7 +126,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x3000:
 			// Check if X register contains NN bytes
-			if (REGS[M_OPC_0X00(M_OPCODE)] == (M_OPCODE & 0x00FF))
+			if (REGS[M_OPC_0X00(M_OPCODE)] == (M_GET_NN_FROM_OPCODE(M_OPCODE)))
 				// If true, increment PC by 4
                 PC += 4;
             else
@@ -141,7 +141,7 @@ void m_exec(m_chip8 *chip8)
         // Tip: It's the inverse of 3XNN
         case 0x4000:
 			// Check if X register doesn't contain NN bytes
-			if (REGS[M_OPC_0X00(M_OPCODE)] != (M_OPCODE & 0x00FF))
+			if (REGS[M_OPC_0X00(M_OPCODE)] != (M_GET_NN_FROM_OPCODE(M_OPCODE)))
 				// If true, increment PC by 4
 				PC += 4;
 			else
@@ -174,7 +174,7 @@ void m_exec(m_chip8 *chip8)
 			printf("6XNN (%x) [NN -> 0x%x]\n", M_OPCODE, M_OPCODE & 0x00FF);
 #endif
 			// Get NN from current opcode and store it into registers[x]
-			REGS[M_OPC_0X00(M_OPCODE)] = M_OPCODE & 0x00FF;
+			REGS[M_OPC_0X00(M_OPCODE)] = M_GET_NN_FROM_OPCODE(M_OPCODE);
 			// Increment PC by 2
 			PC += 2;
 			break;
@@ -185,7 +185,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x7000:
 			// Calculate Vx and add it NN (NN from Current Opcode)
-			REGS[M_OPC_0X00(M_OPCODE)] += M_OPCODE & 0x00FF;
+			REGS[M_OPC_0X00(M_OPCODE)] += M_GET_NN_FROM_OPCODE(M_OPCODE);
 			// Increment PC by 2
 			PC += 2;
 			break;
