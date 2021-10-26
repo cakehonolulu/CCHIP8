@@ -25,13 +25,21 @@ all: $(BINARY)
 ifdef WIN32
 $(BINARY): *.c
 	@echo "🚧 Building..."
+ifdef DEBUG
+	$(MINGW64) -I$(Win32SDL2Headers) -L$(Win32SDL2Libs) $^ -o $@ -lmingw32 -lSDL2main -lSDL2 -lm -DDEBUG
+else
 	$(MINGW64) -I$(Win32SDL2Headers) -L$(Win32SDL2Libs) $^ -o $@ -lmingw32 -lSDL2main -lSDL2 -lm
+endif
 endif
 
 ifdef UNIX
 $(BINARY): *.c
 	@echo "🚧 Building..."
+ifdef DEBUG
+	$(CC) $(CFLAGS) $(SDLFLAGS) $^ -o $@ $(LDFLAGS) -DDEBUG
+else
 	$(CC) $(CFLAGS) $(SDLFLAGS) $^ -o $@ $(LDFLAGS)
+endif
 endif
 
 clean:
