@@ -34,6 +34,7 @@
 
 #define M_OPC_0X00(x)  ((x & 0x0F00) >> 8)
 #define M_OPC_00X0(x)  ((x & 0x00F0) >> 4)
+#define M_OPC_000X(x)  (x & 0x000F)
 #define M_GET_NN_FROM_OPCODE(x) ((x & 0x00FF))
 #define M_GET_NNN_FROM_OPCODE(x) ((x & 0x0FFF))
 
