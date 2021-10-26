@@ -12,17 +12,16 @@ uint16_t m_fetch(m_chip8 *chip8)
 // Using switch cases, after we fetch the current opcode in the program counter, emulate the instruction
 void m_exec(m_chip8 *chip8)
 {
-	uint16_t m_opcode = m_fetch(chip8);
-	M_OPCODE = m_opcode;
+	M_OPCODE = m_fetch(chip8);
 
 #ifdef DEBUG
-	printf("opcode: 0x%x\n", m_opcode);
+	printf("opcode: 0x%x\n", M_OPCODE);
 #endif
 
-	switch(m_opcode & 0xF000)
+	switch(M_OPCODE & 0xF000)
 	{
 		case 0x0000:
-			switch (m_opcode & 0x00FF)
+			switch (M_OPCODE & 0x00FF)
 			{
 				/*
 					00E0:
@@ -157,7 +156,7 @@ void m_exec(m_chip8 *chip8)
 			break;
 
 		case 0x8000:
-			switch (m_opcode & 0x000F)
+			switch (M_OPCODE & 0x000F)
 			{
 				case 0x0000:
                     chip8->m_registers[M_OPC_0X00(M_OPCODE)] = chip8->m_registers[(M_OPCODE & 0x00F0) >> 4];
@@ -260,7 +259,7 @@ void m_exec(m_chip8 *chip8)
 			break;
 
 		case 0xE000:
-			switch (m_opcode & 0x00FF)
+			switch (M_OPCODE & 0x00FF)
 			{
 				case 0x00A1:
 					if (chip8->m_keyboard[chip8->m_registers[M_OPC_0X00(M_OPCODE)]] == 0)
@@ -272,7 +271,7 @@ void m_exec(m_chip8 *chip8)
 			break;
 
 		case 0xF000:
-			switch (m_opcode & 0x00FF)
+			switch (M_OPCODE & 0x00FF)
 			{
 
 				/*
@@ -360,7 +359,7 @@ void m_exec(m_chip8 *chip8)
 			break;
 		
 		default:
-			printf("Uninmplemented opcode 0x%x\n", m_opcode);
+			printf("Uninmplemented opcode 0x%x\n", M_OPCODE);
 			chip8->m_isUnimplemented = true;
 			return;
 	}
