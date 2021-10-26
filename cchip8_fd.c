@@ -20,6 +20,9 @@ void m_exec(m_chip8 *chip8)
 
 	switch(M_OPCODE & 0xF000)
 	{
+		/*
+			0x0000 opcode subfamily
+		*/
 		case 0x0000:
 			switch (M_OPCODE & 0x00FF)
 			{
@@ -187,6 +190,9 @@ void m_exec(m_chip8 *chip8)
 			PC += 2;
 			break;
 
+		/*
+			0x8000 opcode subfamily
+		*/
 		case 0x8000:
 			switch (M_OPCODE & 0x000F)
 			{
