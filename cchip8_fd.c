@@ -385,12 +385,18 @@ void m_exec(m_chip8 *chip8)
 				PC += 2;
 			break;
 
-		case 0xA000: // [ANNN] Sets I to the address NNN
+		/*
+			ANNN:
+			Sets I to the address NNN.
+		*/
+		case 0xA000:
 #ifdef DEBUG
 			printf("ANNN (%x) [NNN -> 0x%x]\n", 
 				M_GET_NNN_FROM_OPCODE(M_OPCODE), M_GET_NNN_FROM_OPCODE(M_OPCODE));
 #endif
+			// Set Index Register to NNN (Obtained from opcode)
 			I = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			// Increment PC by 2
 			PC += 2;
 			break;
 
