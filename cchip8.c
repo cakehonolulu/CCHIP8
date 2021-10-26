@@ -23,6 +23,7 @@ int main(int argc, char **argv)
 		printf("Usage: ./cchip8 [flags] [progname]\n");
 		printf("Command-line switches:\n");
 		printf("-[d or D] Enable the built-in debugger\n");
+		printf("-no-exit  Prevents sudden emulator closes (For example, on Unimplemented Opcode)\n");
 		return EXIT_FAILURE;
 	}
 #endif
