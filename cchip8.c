@@ -17,7 +17,6 @@ int main(int argc, char **argv)
 	printf("CCHIP8 - A C-21 Multiplatform CHIP8 Interpreter Emulator by cakehonolulu\n");
 
 #ifdef __unix__
-	printf("Running under Linux!\n");
 	// Check for commandline arguments
 	if (argc < 2)
 	{
@@ -31,39 +30,59 @@ int main(int argc, char **argv)
 	// Implement a debug mode program flag (Enabled through command line arguments)
 	bool m_dbgmode = false;
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
-	printf("Running under Windows!\n");
-	// Use a char array to store the program name for later use
-	const char *m_filename = "rom.ch8";
-#endif
+	// Implement a no-exit switch that deals with SDL closing routine
+	bool m_no_exit = false;
+
+	// Declare a char pointer with the name of the filename to load
+	const char *m_filename = NULL;
 
 #ifdef __unix__
-	const char *m_filename;
-
-	// Simple for loop that checks for command-line switches and stores the program name from argv to *m_filename
 	for (int i = 1; i < argc; i++)
 	{
-		if (argv[i][0] == '-')
+		if ((strcmp(argv[i], "-d") == 0) || (strcmp(argv[i], "-D") == 0))
 		{
-			if (argv[i][1] == 'd' || argv[i][1] == 'D')
-			{
-				// If "-d" or "-D" switches are found, enable debugger mode 
-				m_dbgmode = true;
-				printf("Entered Debug Mode!\n");
-			} else {
-				// If the switch doesn't exist, warn the user and exit
-				printf("Invalid switch!\n");
-				return EXIT_FAILURE;
-			}
-		} else {
-			// Store the filename into m_filename
+			m_dbgmode = true;
+		} else if (strcmp(argv[i], "-no-exit") == 0)
+		{
+			m_no_exit = true;
+		} else if ((strstr(argv[i], ".ch8") != NULL) || (strstr(argv[i], ".rom") != NULL))
+		{
 			m_filename = argv[i];
-
-			// Print the filename
-			printf("Loading %s...\n", m_filename);
+		} else {
+			printf("Unknown argument: %s\n", argv[i]);
+			exit(EXIT_FAILURE);
 		}
 	}
+
+	if (m_filename == NULL)
+	{
+		printf("No ROM name specified!\n");
+		exit(EXIT_FAILURE);
+	}
+
+	printf("Running under Linux!\n");
+
+	if (m_dbgmode == true)
+	{
+		printf("Debug Mode Enabled!\n");
+	}
+	
+	if (m_no_exit == true)
+	{
+		printf("CCHIP8 won't exit in case of Unimplemented Opcode!\n");
+	}
 #endif
+	
+#if defined(__MINGW32__) || defined(__MINGW64__)
+	// Use a char array to store the program name for later use
+	m_filename = "rom.ch8";
+#endif
+
+#if defined(__MINGW32__) || defined(__MINGW64__)
+	printf("Running under Windows!\n");
+#endif
+
+	printf("Loading %s...\n", m_filename);
 
 	// Use the FILE directive to access a file
 	FILE *m_prg;
@@ -345,31 +364,50 @@ int main(int argc, char **argv)
 		*/
 		if (chip8.m_isUnimplemented == true)
 		{
-			printf("Exiting the main loop...\n");
+			if (m_no_exit == true)
+			{
+				while (true)
+				{
+					while (SDL_PollEvent(&m_event))
+					{
+						switch (m_event.type)
+						{
+							case SDL_QUIT:
+								SDL_Quit();
+								exit(EXIT_FAILURE);
 
-			// Delist the Texture
-			m_texture = NULL;
+							default:
+								break;
+						}	
+					}
+				}
+			} else {
+				printf("Exiting the main loop...\n");
 
-			// Deallocate the Texture
-			SDL_DestroyTexture(m_texture);
+				// Delist the Texture
+				m_texture = NULL;
 
-			// Delist the Renderer
-			m_renderer = NULL;
+				// Deallocate the Texture
+				SDL_DestroyTexture(m_texture);
 
-			// Deallocate the Renderer
-			SDL_DestroyRenderer(m_renderer);
+				// Delist the Renderer
+				m_renderer = NULL;
 
-			// Delist the Window
-			m_window = NULL;
+				// Deallocate the Renderer
+				SDL_DestroyRenderer(m_renderer);
 
-			// Deallocate the Window
-			SDL_DestroyWindow(m_window);
+				// Delist the Window
+				m_window = NULL;
 
-			// Close all SDL2 Subsystems
-			SDL_Quit();
+				// Deallocate the Window
+				SDL_DestroyWindow(m_window);
 
-			// Exit the program returning a failure
-			exit(EXIT_FAILURE);
+				// Close all SDL2 Subsystems
+				SDL_Quit();
+
+				// Exit the program returning a failure
+				exit(EXIT_FAILURE);
+			}
 		} else {
 			if (m_dbgmode == false)
 			{
