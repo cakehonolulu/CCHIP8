@@ -270,13 +270,25 @@ void m_exec(m_chip8 *chip8)
                     PC += 2;
 					break;
 
+				/*
+					8XY5:
+					VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there is not.
+				*/
 				case 0x0005:
-					if(REGS[(M_OPCODE & 0x00F0) >> 4] > REGS[M_OPC_0X00(M_OPCODE)])
-                        REGS[0xF] = 0;
-                    else
-                        REGS[0xF] = 1;
+					// Substract Vy from Vx
+					REGS[M_OPC_0X00(M_OPCODE)] -= REGS[M_OPC_00X0(M_OPCODE)];
 
-                    REGS[M_OPC_0X00(M_OPCODE)] -= REGS[(M_OPCODE & 0x00F0) >> 4];
+					/*
+						Check if there's a borrow, if it exists, flip VF (Flag Register).
+						It's a simple task to do, using algebra:
+						if x1 > x2; (x1 - x2) > 0 there's no borrow, else, there is
+					*/
+					if (REGS[M_OPC_0X00(M_OPCODE)] > REGS[M_OPC_00X0(M_OPCODE)])
+                        REGS[0xF] = 1;
+                    else
+                        REGS[0xF] = 0;
+
+                    // Increment PC by 2
                     PC += 2;
                     break;
 
