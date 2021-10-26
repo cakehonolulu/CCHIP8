@@ -58,6 +58,8 @@ static const uint8_t m_font[CHIP8_FONT_SIZE] = {
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
+#define CHIP8_SPRITEHEIGHT 8
+
 static const uint8_t m_sdl_keys[CHIP8_KEYS] = {
     SDLK_1, // 0
     SDLK_2, // 1
