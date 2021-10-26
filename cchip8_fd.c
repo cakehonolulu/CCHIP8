@@ -427,7 +427,7 @@ void m_exec(m_chip8 *chip8)
             break;
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
-		case 0xD000: ;
+		case 0xD000:
 #endif
 
 #ifdef __unix__
@@ -436,33 +436,27 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
-			// X coord is the closest byte to MSB
-			int m_xcoord = REGS[(M_OPCODE & 0x0F00) >> 8];
+            REGS[VF] = 0;
 
-            int m_ycoord = REGS[(M_OPCODE & 0x00F0) >> 4];
-
-            int ht = M_OPCODE & 0x000F;
-            int wt = 8;
-            REGS[0xF] = 0;
-
-			for (int i = 0; i < ht; i++)
+			for (int i = 0; i < M_OPC_000X(M_OPCODE); i++)
             {
                 int pixel = RAM[I + i];
-                for (int j = 0; j < wt; j++)
+                for (int j = 0; j < CHIP8_SPRITEHEIGHT; j++)
                 {
                     if ((pixel & (0x80 >> j)) != 0)
                     {
-                        int index = ((m_xcoord + j) + ((m_ycoord + i) * 64)) % 2048;
+                        int index = ((REGS[M_OPC_0X00(M_OPCODE)] + j) + ((REGS[M_OPC_00X0(M_OPCODE)] + i) * 64)) % 2048;
                         if (chip8->m_display[index] == 1)
                         {
-                            REGS[0xF] = 1;
+                            REGS[VF] = 1;
                         }
                         chip8->m_display[index] ^= 1;
                     }
                 }
             }
-
+            // Redraw the screen
     		chip8->m_redraw = true;
+    		// Increment PC by 2
 			PC += 2;
 			break;
 
