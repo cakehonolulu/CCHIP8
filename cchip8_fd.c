@@ -599,12 +599,14 @@ void m_exec(m_chip8 *chip8)
 					FX55:
 					Stores V0 to VX (including VX) in memory starting at address I.
 					The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+
+					Tip: The opposite of FX65
 				*/
 				case 0x0055:
 #ifdef DEBUG
 					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", M_OPCODE, M_OPCODE & 0x0F00, M_OPC_0X00(M_OPCODE));
 #endif
-					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); ++m_currentregister)
+					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); m_currentregister++)
 					{
 						RAM[I + m_currentregister] = REGS[m_currentregister];
 					}
