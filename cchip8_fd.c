@@ -614,13 +614,18 @@ void m_exec(m_chip8 *chip8)
 				
 					break;
 
+				/*
+					FX65:
+					Fills V0 to VX (including VX) with values from memory starting at address I.
+					The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+				*/
 				case 0x0065:
 					/* 
 						Use a for() loop to do this task, starting at V0, iterate F(x) times (Calculated above) ending
-						at V(x) register. Each time we enter the for() loop, load in the value at the index register
-						onto the current register pointed by m_currentregister in the loop
+						at V(x) register. Each time we enter the for() loop, load in the value at the index register plus
+						m_currentregister onto the current register pointed by m_currentregister in the loop
 					*/
-					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); ++m_currentregister)
+					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); m_currentregister++)
 					{
 						REGS[m_currentregister] = RAM[I + m_currentregister];
 					}
