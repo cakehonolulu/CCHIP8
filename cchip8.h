@@ -183,6 +183,10 @@ typedef struct chip8
 #define x (M_OPC_0X00(M_OPCODE))
 #define y (M_OPC_00X0(M_OPCODE))
 
+#define Vx V[x]
+#define Vy V[y]
+#define Vf V[F]
+
 #define N M_OPC_000X(M_OPCODE)
 #define NN M_GET_NN_FROM_OPCODE(M_OPCODE)
 #define NNN M_GET_NNN_FROM_OPCODE(M_OPCODE)
