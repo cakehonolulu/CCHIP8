@@ -122,11 +122,11 @@ void m_exec(m_chip8 *chip8)
 
 		/*
 			3XNN:
-			Skips the next instruction if Vx equals to NN
+			Skips the next instruction if VX equals to NN
 		*/
 		case 0x3000:
 			// Check if X register contains NN bytes
-			if (Vx == (NN))
+			if (VX == (NN))
 				// If true, increment PC by 4
                 PC += 4;
             else
@@ -136,12 +136,12 @@ void m_exec(m_chip8 *chip8)
 
         /*
 			4XNN:
-			Skips the next instruction if Vx is not equal to NN
+			Skips the next instruction if VX is not equal to NN
 		*/
         // Tip: It's the inverse of 3XNN
         case 0x4000:
 			// Check if X register doesn't contain NN bytes
-			if (Vx != (NN))
+			if (VX != (NN))
 				// If true, increment PC by 4
 				PC += 4;
 			else
@@ -152,11 +152,11 @@ void m_exec(m_chip8 *chip8)
 
 		/*
 			5XY0:
-			Skip the next instruction if Vx = Vy
+			Skip the next instruction if VX = VY
 		*/
-		// Tip: The easiest of all the 3XNN-4XNN-5XNN series, checks if Vx and Vy are the same
+		// Tip: The easiest of all the 3XNN-4XNN-5XNN series, checks if VX and VY are the same
 		case 0x5000:
-			if (Vx == Vy)
+			if (VX == VY)
 				// Check if X register doesn't contain NN bytes
 				PC += 4;
 			else
@@ -174,7 +174,7 @@ void m_exec(m_chip8 *chip8)
 			printf("6XNN (%x) [NN -> 0x%x]\n", M_OPCODE, M_OPCODE & 0x00FF);
 #endif
 			// Get NN from current opcode and store it into registers[x]
-			Vx = NN;
+			VX = NN;
 			// Increment PC by 2
 			PC += 2;
 			break;
@@ -184,8 +184,8 @@ void m_exec(m_chip8 *chip8)
 			Adds NN to VX. (Carry flag is not changed);
 		*/
 		case 0x7000:
-			// Calculate Vx and add it NN (NN from Current Opcode)
-			Vx += NN;
+			// Calculate VX and add it NN (NN from Current Opcode)
+			VX += NN;
 			// Increment PC by 2
 			PC += 2;
 			break;
@@ -199,11 +199,11 @@ void m_exec(m_chip8 *chip8)
 			{
 				/*
 					8XY0:
-					Set Vx to the value of Vy
+					Set VX to the value of VY
 				*/
 				case 0x0000:
 					// Find V(x) register and set it to V(y)'s value
-                    Vx = Vy;
+                    VX = VY;
                     // Increment PC by 2
                     PC += 2;
                     break;
@@ -214,7 +214,7 @@ void m_exec(m_chip8 *chip8)
                 */
                 case 0x0001:
                 	// Find V(x) register value, OR-it to V(y) register and save it to V(x)
-					Vx |= Vy;
+					VX |= VY;
 					// Increment PC by 2
                     PC += 2;
                 	break;
@@ -225,7 +225,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0002:
 					// Find V(x) register value, AND-it to V(y) register and save it to V(x)
-					Vx &= Vy;
+					VX &= VY;
 					// Increment PC by 2
                     PC += 2;
 					break;
@@ -236,7 +236,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0003:
 					// Find V(x) register value, AND-it to V(y) register and save it to V(x)
-					Vx ^= Vy;
+					VX ^= VY;
 					// Increment PC by 2
                     PC += 2;
 					break;
@@ -247,10 +247,10 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0004:
 					// Find V(x) register value, add V(y) value to it
-					Vx += Vy;
+					VX += VY;
 
 					// Sum V(x) and V(y)
-					uint16_t m_add = Vx + Vy;
+					uint16_t m_add = VX + VY;
 
 					/*
 						Check if the addition overflowed
@@ -262,9 +262,9 @@ void m_exec(m_chip8 *chip8)
 						to decide wether to flip VF or not.
 					*/
                     if (m_add > UCHAR_MAX)
-                        Vf = 1;
+                        VF = 1;
                     else
-                        Vf = 0;
+                        VF = 0;
 
                     // Increment PC by 2
                     PC += 2;
@@ -275,18 +275,18 @@ void m_exec(m_chip8 *chip8)
 					VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there is not.
 				*/
 				case 0x0005:
-					// Substract Vy from Vx
-					Vx -= Vy;
+					// Substract VY from VX
+					VX -= VY;
 
 					/*
 						Check if there's a borrow, if it exists, flip VF (Flag Register).
 						It's a simple task to do, using algebra:
 						if x1 > x2; (x1 - x2) > 0 there's no borrow, else, there is
 					*/
-					if (Vx > Vy)
-                        Vf = 0;
+					if (VX > VY)
+                        VF = 0;
                     else
-                        Vf = 1;
+                        VF = 1;
 
                     // Increment PC by 2
                     PC += 2;
@@ -316,10 +316,10 @@ void m_exec(m_chip8 *chip8)
 						So if we AND 0x1(16) [0001 (2)] to the value, we'll know what
 						the LSB of it looks like.
                 	*/
-                	Vf = (Vx & 0x1);
+                	VF = (VX & 0x1);
 
                 	// What's left is bitshifting 1 time to the right V(x) register
-                	Vx >>= 1;
+                	VX >>= 1;
 
                 	// Increment PC by 2
                 	PC += 2;
@@ -333,13 +333,13 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0007:
 					// Do the same as 8XY5 but the inverse
-					Vx = Vy - Vx;
+					VX = VY - VX;
 
 					// I'll use a different trick that doesn't involve actually substracting
-					if (Vy > Vx)
-                        Vf = 1;
+					if (VY > VX)
+                        VF = 1;
                     else
-                        Vf = 0;
+                        VF = 0;
 
                     // Increment PC by 2
                     PC += 2;
@@ -356,10 +356,10 @@ void m_exec(m_chip8 *chip8)
                 		Instead of ANDing 0x1(16) [0001(2)], we and 0xF(16) [1111(2)]
                 		to get the MSB of the operand
                 	*/
-                	Vf = (Vx & 0x80) >> 7;
+                	VF = (VX & 0x80) >> 7;
 
                 	// What's left is bitshifting 1 time to the left V(x) register
-                	Vx <<= 1;
+                	VX <<= 1;
 
                 	// Increment PC by 2
                 	PC += 2;
@@ -377,7 +377,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x9000:
 			// Check if V(x) != V(y)
-			if ((Vx) != (Vy))
+			if ((VX) != (VY))
 				// If they're not equal, skip 1 instruction
 				PC += 4;
 			else
@@ -421,7 +421,7 @@ void m_exec(m_chip8 *chip8)
 
 				We modulo by 0x100 to get a two digit number residue (Which lands between 0 and 255)
 			*/
-			Vx = (rand() % (0x100)) & NN;
+			VX = (rand() % (0x100)) & NN;
 			// Increment PC by 2
             PC += 2;
             break;
@@ -443,7 +443,7 @@ void m_exec(m_chip8 *chip8)
 			uint8_t m_spriteheight = N;
 
 			// DXYN uses VF as a collision detector, set it to 0 before entering the algorithm
-			Vf = 0;
+			VF = 0;
 
 			// Loop through each byte of the sprite
 			for (size_t m_height = 0; m_height < m_spriteheight; m_height++)
@@ -452,10 +452,10 @@ void m_exec(m_chip8 *chip8)
 				uint8_t m_sprite = RAM[I + m_height];
 
 				/*
-					Calculate the row based on current sprite height added to Vy modulo CHIP8_ROWS to
+					Calculate the row based on current sprite height added to VY modulo CHIP8_ROWS to
 					aid in screen wraps
 				*/
-				int32_t m_row = (Vy + m_height) % CHIP8_ROWS;
+				int32_t m_row = (VY + m_height) % CHIP8_ROWS;
 
 				// Loop through the length of the sprite (Which is always 8, 5x8)
 				for (size_t m_width = 0; m_width < CHIP8_SPRITELENGTH; m_width++)
@@ -464,7 +464,7 @@ void m_exec(m_chip8 *chip8)
 					uint8_t m_spritepixel = m_sprite & (0x80 >> m_width);
 
 					// Obtain the column (Same method as m_row)
-					int32_t m_col = (Vx + m_width) % CHIP8_COLUMNS;
+					int32_t m_col = (VX + m_width) % CHIP8_COLUMNS;
 
 					// Calculate the offset on the screen ((row * maxcol) + col)
 					int32_t m_offset = m_row * CHIP8_COLUMNS + m_col;
@@ -479,7 +479,7 @@ void m_exec(m_chip8 *chip8)
 						if (*m_displaypixel == 0xFFFFFFFF)
 						{
 							// Set collision detector register (VF) to 1
-							Vf = 1;
+							VF = 1;
 						}
 
 						// XOR the sprite pixel
@@ -508,7 +508,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x009E:
 					// Check if the V(x) pointer to the keyboard array equals to 1 (Key pressed)
-					if (chip8->m_keyboard[Vx] == 1)
+					if (chip8->m_keyboard[VX] == 1)
 						// Skip 1 instruction
                         PC +=  4;
                     else
@@ -522,7 +522,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x00A1:
 					// Check if the V(x) pointer to the keyboard array equals to 0 (Key unpressed)
-					if (chip8->m_keyboard[Vx] == 0)
+					if (chip8->m_keyboard[VX] == 0)
 						// Skip 1 instruction
                         PC +=  4;
                     else
@@ -547,7 +547,7 @@ void m_exec(m_chip8 *chip8)
 					Sets VX to the value of the delay timer.
 				*/
 				case 0x0007:
-					Vx = chip8->m_delaytmr;
+					VX = chip8->m_delaytmr;
                     PC += 2;
 					break;
 
@@ -560,7 +560,7 @@ void m_exec(m_chip8 *chip8)
 					{
 						if (chip8->m_keyboard[i] != 0)
 						{
-							Vx = i;
+							VX = i;
 							PC += 2;
 							break;
 						}
@@ -573,12 +573,12 @@ void m_exec(m_chip8 *chip8)
 					Sets the delay timer to VX.
 				*/
 				case 0x0015:
-					chip8->m_delaytmr = Vx;
+					chip8->m_delaytmr = VX;
                     PC += 2;
                     break;
 
                 case 0x0018:
-                	chip8->m_soundtmr = Vx;
+                	chip8->m_soundtmr = VX;
                     PC += 2;
                     break;
 
@@ -588,7 +588,7 @@ void m_exec(m_chip8 *chip8)
 				*/
                 case 0x001E:
                 	// Add V(x) to the Index Register
-                	I += Vx;
+                	I += VX;
                 	// Increment PC by 2
                 	PC += 2;
                 	break;
@@ -599,7 +599,7 @@ void m_exec(m_chip8 *chip8)
 					Characters 0-F (in hexadecimal) are represented by a 4x5 font.
 				*/
 				case 0x0029:
-    					I = (Vx * 0x5);
+    					I = (VX * 0x5);
     					PC += 2;
     					break;
 				/*
@@ -614,15 +614,15 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("FX33 Opcode!\n"); 
 #endif
-    				RAM[I] = Vx / 100;
+    				RAM[I] = VX / 100;
 #ifdef DEBUG
 					printf("idx (%d)\n", RAM[I]); 
 #endif
-    				RAM[I + 1] = (Vx / 10) % 10;
+    				RAM[I + 1] = (VX / 10) % 10;
 #ifdef DEBUG
 					printf("idx+1 (%d)\n", RAM[I + 1]);
 #endif
-    				RAM[I + 2] = (Vx % 100) % 10;
+    				RAM[I + 2] = (VX % 100) % 10;
 #ifdef DEBUG
 					printf("idx+2 (%d)\n", RAM[I + 2]);
 #endif
@@ -640,7 +640,7 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", M_OPCODE, M_OPCODE & 0x0F00, x);
 #endif
-					for (size_t m_currentregister = 0; m_currentregister <= Vx; m_currentregister++)
+					for (size_t m_currentregister = 0; m_currentregister <= X; m_currentregister++)
 					{
 						RAM[I + m_currentregister] = V[m_currentregister];
 					}
@@ -661,7 +661,7 @@ void m_exec(m_chip8 *chip8)
 						at V(x) register. Each time we enter the for() loop, load in the value at the index register plus
 						m_currentregister onto the current register pointed by m_currentregister in the loop
 					*/
-					for (size_t m_currentregister = 0; m_currentregister <= Vx; m_currentregister++)
+					for (size_t m_currentregister = 0; m_currentregister <= X; m_currentregister++)
 					{
 						V[m_currentregister] = RAM[I + m_currentregister];
 					}
