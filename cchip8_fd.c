@@ -80,10 +80,10 @@ void m_exec(m_chip8 *chip8)
 
 				Set the program counter to the address NNN found in the current opcode.
 			*/
-			PC = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			PC = NNN;
 
 #ifdef DEBUG
-			printf("Jumping to 0x%x\n", M_GET_NNN_FROM_OPCODE(M_OPCODE));
+			printf("Jumping to 0x%x\n", NNN);
 #endif
 
 			break;
@@ -95,7 +95,7 @@ void m_exec(m_chip8 *chip8)
 		case 0x2000:
 
 #ifdef DEBUG
-			printf("2NNN (%x) [NNN -> 0x%x]\n", M_OPCODE, M_GET_NNN_FROM_OPCODE(M_OPCODE));
+			printf("2NNN (%x) [NNN -> 0x%x]\n", M_OPCODE, NNN);
 			printf("2NNN -> PC: 0x%x\n", PC);
 #endif
 			/*
@@ -113,7 +113,7 @@ void m_exec(m_chip8 *chip8)
 			SP++;
 
 			// Set the program counter to the address provided by the opcode
-			PC = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			PC = NNN;
 
 #ifdef DEBUG
 			printf("2NNN Jumped to: 0x%x\n", PC);
@@ -126,7 +126,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x3000:
 			// Check if X register contains NN bytes
-			if (V[M_OPC_0X00(M_OPCODE)] == (M_GET_NN_FROM_OPCODE(M_OPCODE)))
+			if (V[x] == (NN))
 				// If true, increment PC by 4
                 PC += 4;
             else
@@ -141,7 +141,7 @@ void m_exec(m_chip8 *chip8)
         // Tip: It's the inverse of 3XNN
         case 0x4000:
 			// Check if X register doesn't contain NN bytes
-			if (V[M_OPC_0X00(M_OPCODE)] != (M_GET_NN_FROM_OPCODE(M_OPCODE)))
+			if (V[x] != (NN))
 				// If true, increment PC by 4
 				PC += 4;
 			else
@@ -156,7 +156,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		// Tip: The easiest of all the 3XNN-4XNN-5XNN series, checks if Vx and Vy are the same
 		case 0x5000:
-			if (V[M_OPC_0X00(M_OPCODE)] == V[M_OPC_00X0(M_OPCODE)])
+			if (V[x] == V[y])
 				// Check if X register doesn't contain NN bytes
 				PC += 4;
 			else
@@ -174,7 +174,7 @@ void m_exec(m_chip8 *chip8)
 			printf("6XNN (%x) [NN -> 0x%x]\n", M_OPCODE, M_OPCODE & 0x00FF);
 #endif
 			// Get NN from current opcode and store it into registers[x]
-			V[M_OPC_0X00(M_OPCODE)] = M_GET_NN_FROM_OPCODE(M_OPCODE);
+			V[x] = NN;
 			// Increment PC by 2
 			PC += 2;
 			break;
@@ -185,7 +185,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x7000:
 			// Calculate Vx and add it NN (NN from Current Opcode)
-			V[M_OPC_0X00(M_OPCODE)] += M_GET_NN_FROM_OPCODE(M_OPCODE);
+			V[x] += NN;
 			// Increment PC by 2
 			PC += 2;
 			break;
@@ -203,7 +203,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0000:
 					// Find V(x) register and set it to V(y)'s value
-                    V[M_OPC_0X00(M_OPCODE)] = V[M_OPC_00X0(M_OPCODE)];
+                    V[x] = V[y];
                     // Increment PC by 2
                     PC += 2;
                     break;
@@ -214,7 +214,7 @@ void m_exec(m_chip8 *chip8)
                 */
                 case 0x0001:
                 	// Find V(x) register value, OR-it to V(y) register and save it to V(x)
-					V[M_OPC_0X00(M_OPCODE)] |= V[M_OPC_00X0(M_OPCODE)];
+					V[x] |= V[y];
 					// Increment PC by 2
                     PC += 2;
                 	break;
@@ -225,7 +225,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0002:
 					// Find V(x) register value, AND-it to V(y) register and save it to V(x)
-					V[M_OPC_0X00(M_OPCODE)] &= V[M_OPC_00X0(M_OPCODE)];
+					V[x] &= V[y];
 					// Increment PC by 2
                     PC += 2;
 					break;
@@ -236,7 +236,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0003:
 					// Find V(x) register value, AND-it to V(y) register and save it to V(x)
-					V[M_OPC_0X00(M_OPCODE)] ^= V[M_OPC_00X0(M_OPCODE)];
+					V[x] ^= V[y];
 					// Increment PC by 2
                     PC += 2;
 					break;
@@ -247,10 +247,10 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0004:
 					// Find V(x) register value, add V(y) value to it
-					V[M_OPC_0X00(M_OPCODE)] += V[M_OPC_00X0(M_OPCODE)];
+					V[x] += V[y];
 
 					// Sum V(x) and V(y)
-					uint16_t m_add = V[M_OPC_0X00(M_OPCODE)] + V[M_OPC_00X0(M_OPCODE)];
+					uint16_t m_add = V[x] + V[y];
 
 					/*
 						Check if the addition overflowed
@@ -276,14 +276,14 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0005:
 					// Substract Vy from Vx
-					V[M_OPC_0X00(M_OPCODE)] -= V[M_OPC_00X0(M_OPCODE)];
+					V[x] -= V[y];
 
 					/*
 						Check if there's a borrow, if it exists, flip VF (Flag Register).
 						It's a simple task to do, using algebra:
 						if x1 > x2; (x1 - x2) > 0 there's no borrow, else, there is
 					*/
-					if (V[M_OPC_0X00(M_OPCODE)] > V[M_OPC_00X0(M_OPCODE)])
+					if (V[x] > V[y])
                         V[F] = 0;
                     else
                         V[F] = 1;
@@ -300,7 +300,7 @@ void m_exec(m_chip8 *chip8)
                 	/*
 						What we need to do is store the LSB of V(x) in VF.
 						It's a simple problem.
-						Let's say = V[M_OPC_0X00(M_OPCODE) is 0x4 (Base 16)
+						Let's say = V[x is 0x4 (Base 16)
 						0x4 in binary equals to 0100 (Base 2)
 						If we want to obtain the LSB, we can use a little
 						logic trick, which involves AND-ing 0x1 to the previous value.
@@ -316,10 +316,10 @@ void m_exec(m_chip8 *chip8)
 						So if we AND 0x1(16) [0001 (2)] to the value, we'll know what
 						the LSB of it looks like.
                 	*/
-                	V[F] = (V[M_OPC_0X00(M_OPCODE)] & 0x1);
+                	V[F] = (V[x] & 0x1);
 
                 	// What's left is bitshifting 1 time to the right V(x) register
-                	V[M_OPC_0X00(M_OPCODE)] >>= 1;
+                	V[x] >>= 1;
 
                 	// Increment PC by 2
                 	PC += 2;
@@ -333,10 +333,10 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0007:
 					// Do the same as 8XY5 but the inverse
-					V[M_OPC_0X00(M_OPCODE)] = V[M_OPC_00X0(M_OPCODE)] - V[M_OPC_0X00(M_OPCODE)];
+					V[x] = V[y] - V[x];
 
 					// I'll use a different trick that doesn't involve actually substracting
-					if (V[M_OPC_00X0(M_OPCODE)] > V[M_OPC_0X00(M_OPCODE)])
+					if (V[y] > V[x])
                         V[F] = 1;
                     else
                         V[F] = 0;
@@ -356,10 +356,10 @@ void m_exec(m_chip8 *chip8)
                 		Instead of ANDing 0x1(16) [0001(2)], we and 0xF(16) [1111(2)]
                 		to get the MSB of the operand
                 	*/
-                	V[F] = (V[M_OPC_0X00(M_OPCODE)] & 0x80) >> 7;
+                	V[F] = (V[x] & 0x80) >> 7;
 
                 	// What's left is bitshifting 1 time to the left V(x) register
-                	V[M_OPC_0X00(M_OPCODE)] <<= 1;
+                	V[x] <<= 1;
 
                 	// Increment PC by 2
                 	PC += 2;
@@ -377,7 +377,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0x9000:
 			// Check if V(x) != V(y)
-			if ((V[M_OPC_0X00(M_OPCODE)]) != (V[M_OPC_00X0(M_OPCODE)]))
+			if ((V[x]) != (V[y]))
 				// If they're not equal, skip 1 instruction
 				PC += 4;
 			else
@@ -392,10 +392,10 @@ void m_exec(m_chip8 *chip8)
 		case 0xA000:
 #ifdef DEBUG
 			printf("ANNN (%x) [NNN -> 0x%x]\n", 
-				M_GET_NNN_FROM_OPCODE(M_OPCODE), M_GET_NNN_FROM_OPCODE(M_OPCODE));
+				NNN, NNN);
 #endif
 			// Set Index Register to NNN (Obtained from opcode)
-			I = M_GET_NNN_FROM_OPCODE(M_OPCODE);
+			I = NNN;
 			// Increment PC by 2
 			PC += 2;
 			break;
@@ -406,7 +406,7 @@ void m_exec(m_chip8 *chip8)
 		*/
 		case 0xB000:
 			// Set program counter to the address specified by opcode (NNN) plus V0 Register
-			PC = M_GET_NNN_FROM_OPCODE(M_OPCODE) + V[V0]; 
+			PC = NNN + V[V0]; 
 			break;
 
 		/*
@@ -421,7 +421,7 @@ void m_exec(m_chip8 *chip8)
 
 				We modulo by 0x100 to get a two digit number residue (Which lands between 0 and 255)
 			*/
-			V[M_OPC_0X00(M_OPCODE)] = (rand() % (0x100)) & M_GET_NN_FROM_OPCODE(M_OPCODE);
+			V[x] = (rand() % (0x100)) & NN;
 			// Increment PC by 2
             PC += 2;
             break;
@@ -440,7 +440,7 @@ void m_exec(m_chip8 *chip8)
 #endif
 
 			// Get the sprite height from the last digit of the opcode
-			uint8_t m_spriteheight = M_OPC_000X(M_OPCODE);
+			uint8_t m_spriteheight = N;
 
 			// DXYN uses VF as a collision detector, set it to 0 before entering the algorithm
 			V[F] = 0;
@@ -508,7 +508,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x009E:
 					// Check if the V(x) pointer to the keyboard array equals to 1 (Key pressed)
-					if (chip8->m_keyboard[V[M_OPC_0X00(M_OPCODE)]] == 1)
+					if (chip8->m_keyboard[V[x]] == 1)
 						// Skip 1 instruction
                         PC +=  4;
                     else
@@ -522,7 +522,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x00A1:
 					// Check if the V(x) pointer to the keyboard array equals to 0 (Key unpressed)
-					if (chip8->m_keyboard[V[M_OPC_0X00(M_OPCODE)]] == 0)
+					if (chip8->m_keyboard[V[x]] == 0)
 						// Skip 1 instruction
                         PC +=  4;
                     else
@@ -547,7 +547,7 @@ void m_exec(m_chip8 *chip8)
 					Sets VX to the value of the delay timer.
 				*/
 				case 0x0007:
-					V[M_OPC_0X00(M_OPCODE)] = chip8->m_delaytmr;
+					V[x] = chip8->m_delaytmr;
                     PC += 2;
 					break;
 
@@ -560,7 +560,7 @@ void m_exec(m_chip8 *chip8)
 					{
 						if (chip8->m_keyboard[i] != 0)
 						{
-							V[M_OPC_0X00(M_OPCODE)] = i;
+							V[x] = i;
 							PC += 2;
 							break;
 						}
@@ -573,12 +573,12 @@ void m_exec(m_chip8 *chip8)
 					Sets the delay timer to VX.
 				*/
 				case 0x0015:
-					chip8->m_delaytmr = V[M_OPC_0X00(M_OPCODE)];
+					chip8->m_delaytmr = V[x];
                     PC += 2;
                     break;
 
                 case 0x0018:
-                	chip8->m_soundtmr = V[M_OPC_0X00(M_OPCODE)];
+                	chip8->m_soundtmr = V[x];
                     PC += 2;
                     break;
 
@@ -588,7 +588,7 @@ void m_exec(m_chip8 *chip8)
 				*/
                 case 0x001E:
                 	// Add V(x) to the Index Register
-                	I += V[M_OPC_0X00(M_OPCODE)];
+                	I += V[x];
                 	// Increment PC by 2
                 	PC += 2;
                 	break;
@@ -599,7 +599,7 @@ void m_exec(m_chip8 *chip8)
 					Characters 0-F (in hexadecimal) are represented by a 4x5 font.
 				*/
 				case 0x0029:
-    					I = (V[M_OPC_0X00(M_OPCODE)] * 0x5);
+    					I = (V[x] * 0x5);
     					PC += 2;
     					break;
 				/*
@@ -614,15 +614,15 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 					printf("FX33 Opcode!\n"); 
 #endif
-    				RAM[I] = V[M_OPC_0X00(M_OPCODE)] / 100;
+    				RAM[I] = V[x] / 100;
 #ifdef DEBUG
 					printf("idx (%d)\n", RAM[I]); 
 #endif
-    				RAM[I + 1] = (V[M_OPC_0X00(M_OPCODE)] / 10) % 10;
+    				RAM[I + 1] = (V[x] / 10) % 10;
 #ifdef DEBUG
 					printf("idx+1 (%d)\n", RAM[I + 1]);
 #endif
-    				RAM[I + 2] = (V[M_OPC_0X00(M_OPCODE)] % 100) % 10;
+    				RAM[I + 2] = (V[x] % 100) % 10;
 #ifdef DEBUG
 					printf("idx+2 (%d)\n", RAM[I + 2]);
 #endif
@@ -638,9 +638,9 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0055:
 #ifdef DEBUG
-					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", M_OPCODE, M_OPCODE & 0x0F00, M_OPC_0X00(M_OPCODE));
+					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", M_OPCODE, M_OPCODE & 0x0F00, x);
 #endif
-					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); m_currentregister++)
+					for (size_t m_currentregister = 0; m_currentregister <= x; m_currentregister++)
 					{
 						RAM[I + m_currentregister] = V[m_currentregister];
 					}
@@ -661,7 +661,7 @@ void m_exec(m_chip8 *chip8)
 						at V(x) register. Each time we enter the for() loop, load in the value at the index register plus
 						m_currentregister onto the current register pointed by m_currentregister in the loop
 					*/
-					for (size_t m_currentregister = 0; m_currentregister <= M_OPC_0X00(M_OPCODE); m_currentregister++)
+					for (size_t m_currentregister = 0; m_currentregister <= x; m_currentregister++)
 					{
 						V[m_currentregister] = RAM[I + m_currentregister];
 					}
