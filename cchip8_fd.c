@@ -637,7 +637,7 @@ void m_exec(m_chip8 *chip8)
 				*/
 				case 0x0055:
 #ifdef DEBUG
-					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", M_OPCODE, M_OPCODE & 0x0F00, x);
+					printf("m_currentopcode 0x%x, m_currentopcode & 0x%x, m_currentopcode &>> 0x%x\n", M_OPCODE, M_OPCODE & 0x0F00, VX);
 #endif
 					for (size_t m_currentregister = 0; m_currentregister <= X; m_currentregister++)
 					{
