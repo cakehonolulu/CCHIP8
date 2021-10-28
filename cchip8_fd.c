@@ -438,12 +438,11 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
+			// DXYN uses VF as a collision detector, set it to 0 before entering the algorithm
+			VF = 0;
 
 			// Get the sprite height from the last digit of the opcode
 			uint8_t m_spriteheight = N;
-
-			// DXYN uses VF as a collision detector, set it to 0 before entering the algorithm
-			VF = 0;
 
 			// Loop through each byte of the sprite
 			for (size_t m_height = 0; m_height < m_spriteheight; m_height++)
