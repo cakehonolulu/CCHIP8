@@ -91,12 +91,12 @@ enum m_allreg
 	V7 = 0x7,
 	V8 = 0x8,
 	V9 = 0x9,
-	VA = 0xA,
-	VB = 0xB,
-	VC = 0xC,
-	VD = 0xD,
-	VE = 0xE,
-	VF = 0xF
+	A = 0xA,
+	B = 0xB,
+	C = 0xC,
+	D = 0xD,
+	E = 0xE,
+	F = 0xF
 };
 
 typedef struct chip8
@@ -176,7 +176,7 @@ typedef struct chip8
 #define RAM (chip8->m_memory)
 
 // Registers
-#define REGS (chip8->m_registers)
+#define V (chip8->m_registers)
 
 void m_exec(m_chip8 *chip8);
 
