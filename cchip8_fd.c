@@ -426,13 +426,7 @@ void m_exec(m_chip8 *chip8)
             PC += 2;
             break;
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
 		case 0xD000:
-#endif
-
-#ifdef __unix__
-		case 0xD000:
-#endif
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
