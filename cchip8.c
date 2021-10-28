@@ -1,4 +1,4 @@
-#include "cchip8.h"
+#include "include/cchip8.h"
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 /*
@@ -481,7 +481,7 @@ int main(int argc, char **argv)
 // SDL2 Icon using RAW Data Method by blog.gibson.sh
 void SDL_SetWindowIconFromRAW(SDL_Window* m_window)
 {
-  #include "cchip8_icn.h"
+  #include "include/cchip8_icn.h"
 
   uint32_t rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

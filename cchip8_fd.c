@@ -1,4 +1,4 @@
-#include "cchip8.h"
+#include "include/cchip8.h"
 
 // Fetch memory and construct the opcode based on the program counter
 uint16_t m_fetch(m_chip8 *chip8)
