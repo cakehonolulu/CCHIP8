@@ -30,6 +30,8 @@
 #define CHIP8_COLUMNS 64
 #define CHIP8_ROWS 32
 
+#define CHIP8_SPRITELENGTH 8
+
 #define CHIP8_INITIAL_PC 0x200
 
 #define M_OPC_0X00(x)  ((x & 0x0F00) >> 8)

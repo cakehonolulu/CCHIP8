@@ -430,24 +430,45 @@ void m_exec(m_chip8 *chip8)
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
-            V[F] = 0;
 
-			for (int i = 0; i < M_OPC_000X(M_OPCODE); i++)
-            {
-                int pixel = RAM[I + i];
-                for (int j = 0; j < CHIP8_SPRITEHEIGHT; j++)
-                {
-                    if ((pixel & (0x80 >> j)) != 0)
-                    {
-                        int index = ((V[M_OPC_0X00(M_OPCODE)] + j) + ((V[M_OPC_00X0(M_OPCODE)] + i) * 64)) % 2048;
-                        if (chip8->m_display[index] == 1)
-                        {
-                            V[F] = 1;
-                        }
-                        chip8->m_display[index] ^= 1;
-                    }
-                }
-            }
+			uint8_t m_spriteheight = M_OPC_000X(M_OPCODE);
+
+			// Wrap if going beyond screen boundaries
+			uint8_t xPos = V[x] % CHIP8_COLUMNS;
+			uint8_t yPos = V[y] % CHIP8_ROWS;
+
+			V[F] = 0;
+
+			for (unsigned int i = 0; i < m_spriteheight; i++)
+			{
+				uint8_t m_sprite = RAM[I + i];
+				int32_t m_row = (V[y] + i) % 32;
+
+				for (unsigned int f = 0; f < 8; f++)
+				{
+					uint8_t spritePixel = m_sprite & (0x80u >> f);
+
+					int32_t m_col = (V[x] + f) % 64;
+
+					int32_t m_offset = m_row * CHIP8_COLUMNS + m_col;
+
+					uint32_t* screenPixel = &chip8->m_display[m_offset];
+
+					// Sprite pixel is on
+					if (spritePixel)
+					{
+						// Screen pixel also on - collision
+						if (*screenPixel == 0xFFFFFFFF)
+						{
+							V[F] = 1;
+						}
+
+						// Effectively XOR with the sprite pixel
+						*screenPixel ^= 0xFFFFFFFF;
+					}
+				}
+			}
+
             // Redraw the screen
     		chip8->m_redraw = true;
     		// Increment PC by 2
