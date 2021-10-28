@@ -356,7 +356,7 @@ void m_exec(m_chip8 *chip8)
                 		Instead of ANDing 0x1(16) [0001(2)], we and 0xF(16) [1111(2)]
                 		to get the MSB of the operand
                 	*/
-                	REGS[VF] = (REGS[M_OPC_0X00(M_OPCODE)] & 0xF);
+                	REGS[VF] = (REGS[M_OPC_0X00(M_OPCODE)] & 0x80) >> 7;
 
                 	// What's left is bitshifting 1 time to the left V(x) register
                 	REGS[M_OPC_0X00(M_OPCODE)] <<= 1;
