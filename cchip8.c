@@ -433,20 +433,8 @@ int main(int argc, char **argv)
 		if (chip8.m_redraw)
 		{
 			chip8.m_redraw = false;
-				
-			uint32_t pixels[32 * 64];
 
-			for (int i = 0; i < 32 * 64; i++)
-			{
-				if (chip8.m_display[i] == 0)
-				{
-					pixels[i] = 0xFF000000;
-				} else {
-					pixels[i] = 0xFFFFFFFF;
-				}
-			}
-
-			SDL_UpdateTexture(m_texture, NULL, pixels, 64 * sizeof(uint32_t));
+			SDL_UpdateTexture(m_texture, NULL, chip8.m_display, 64 * sizeof(uint32_t));
 			SDL_RenderClear(m_renderer);
 			SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
 			SDL_RenderPresent(m_renderer);
