@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 int main(int argc, char **argv)
 #endif
 {
-	printf("CCHIP8 - A C-21 Multiplatform CHIP8 Interpreter Emulator by cakehonolulu\n");
+	printf("CCHIP8 - A C-21 Multiplatform CHIP8 Bytecode Interpreter Emulator\n");
 
 #ifdef __unix__
 	// Check for commandline arguments
@@ -233,7 +233,7 @@ int main(int argc, char **argv)
 	}
 
 	// Create a 640 x 320 (px) window
-	m_window = SDL_CreateWindow("CCHIP8 Emulator - cakehonolulu (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	m_window = SDL_CreateWindow("CCHIP8 (SDL2)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 							  (CHIP8_COLUMNS * 10), (CHIP8_ROWS * 10), SDL_WINDOW_SHOWN);
 
 	// Check if Window could be crafted
