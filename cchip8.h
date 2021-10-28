@@ -178,8 +178,8 @@ typedef struct chip8
 // Registers
 #define V (chip8->m_registers)
 
-#define Vx (M_OPC_0X00(M_OPCODE))
-#define Vy (M_OPC_00X0(M_OPCODE))
+#define x (M_OPC_0X00(M_OPCODE))
+#define y (M_OPC_00X0(M_OPCODE))
 
 void m_exec(m_chip8 *chip8);
 
