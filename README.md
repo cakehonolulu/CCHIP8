@@ -26,18 +26,17 @@ CCHIP8 aims to be *the interpreter* that translates CHIP8s Instructions to your 
 
 ## Compiling
 
-### For Linux (Using GCC 11):
+### For Linux (Using GCC):
 ```sh
-gcc cchip8.c cchip8_fd.c -Wall -Wextra -lSDL2 -o cchip8
+make UNIX=1
 ```
 
-### Cross-compiling to Windows (Using GCC 10 and targetting x86_64)
+### Cross-compiling to Windows (MinGW)
 ```sh
-x86_64-w64-mingw32-gcc-10-win32 cchip8.c cchip8_fd.c -I$Win32SDL2Headers -L$Win32SDL2Libs -lmingw32 -lSDL2main -lSDL2 -o cchip8.exe
+make WIN32=1
 ```
 
 Don't forget to put MINGW SDL2 Development Kit in your path! Personally I point $Win32SDL2Headers to where MINGW SDL2 Headers are and $Win32SDL2Libs where SDL2 Libs are
-
 
 (Add -DDEBUG switch if you want to print debug output on the program's terminal)
 
@@ -49,19 +48,17 @@ Don't forget to put MINGW SDL2 Development Kit in your path! Personally I point 
 Arguments:
 
 -d Enable the in-built debugger
-
 -D Same as -d
-
+-no-exit  Prevents sudden emulator closes (For example, on Unimplemented Opcode)
 ### Under Windows
 
 Simply open cchip8.exe and it'll load any program you put inside the same directory with this name 'rom.ch8'
 
 ## Motivation
-Understand how SDL2 works as I had never used it before
+* Understand how SDL2 works as I had never used it before
+* Understand how LLE Emulation (Hardware level) works.
 
-Understand how LLE Emulation (Hardware level) works.
-
-CHIP8 is a small-enough interpreter that can be easily tackled using LLE and a simple fetch & decode cycle where using switch cases won't really affect performance that much considering nowaday's regular PC computing power
+CHIP8 is a small-enough interpreter that can be easily tackled using LLE and a simple fetch & decode cycle where using switch cases won't really affect performance that much considering nowadays regular PC computing power
 
 ## TODOs
 
