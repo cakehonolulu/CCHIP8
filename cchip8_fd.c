@@ -426,45 +426,64 @@ void m_exec(m_chip8 *chip8)
             PC += 2;
             break;
 
+        /*
+        	DXYN:
+        	Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels.
+        	Each row of 8 pixels is read as bit-coded starting from memory location I;
+        	I value does not change after the execution of this instruction.
+        	As described above, VF is set to 1 if any screen pixels are flipped from set to
+        	unset when the sprite is drawn, and to 0 if that does not happen
+        */
 		case 0xD000:
 #ifdef DEBUG
 			printf("Drawing Sprite...\n");
 #endif
 
+			// Get the sprite height from the last digit of the opcode
 			uint8_t m_spriteheight = M_OPC_000X(M_OPCODE);
 
-			// Wrap if going beyond screen boundaries
-			uint8_t xPos = V[x] % CHIP8_COLUMNS;
-			uint8_t yPos = V[y] % CHIP8_ROWS;
-
+			// DXYN uses VF as a collision detector, set it to 0 before entering the algorithm
 			V[F] = 0;
 
-			for (unsigned int i = 0; i < m_spriteheight; i++)
+			// Loop through each byte of the sprite
+			for (size_t m_height = 0; m_height < m_spriteheight; m_height++)
 			{
-				uint8_t m_sprite = RAM[I + i];
-				int32_t m_row = (V[y] + i) % 32;
+				// Sprite starts at RAM[Index Register + Current Sprite Height]
+				uint8_t m_sprite = RAM[I + m_height];
 
-				for (unsigned int f = 0; f < 8; f++)
+				/*
+					Calculate the row based on current sprite height added to V[y] modulo CHIP8_ROWS to
+					aid in screen wraps
+				*/
+				int32_t m_row = (V[y] + m_height) % CHIP8_ROWS;
+
+				// Loop through the length of the sprite (Which is always 8, 5x8)
+				for (size_t m_width = 0; m_width < CHIP8_SPRITELENGTH; m_width++)
 				{
-					uint8_t spritePixel = m_sprite & (0x80u >> f);
+					// Obtain the MSB of the sprite pixel to know if the pixel is on (1) or off (0)
+					uint8_t m_spritepixel = m_sprite & (0x80 >> m_width);
 
-					int32_t m_col = (V[x] + f) % 64;
+					// Obtain the column (Same method as m_row)
+					int32_t m_col = (V[x] + m_width) % CHIP8_COLUMNS;
 
+					// Calculate the offset on the screen ((row * maxcol) + col)
 					int32_t m_offset = m_row * CHIP8_COLUMNS + m_col;
 
-					uint32_t* screenPixel = &chip8->m_display[m_offset];
+					// Pointer to the display offset
+					uint32_t *m_displaypixel = &chip8->m_display[m_offset];
 
-					// Sprite pixel is on
-					if (spritePixel)
+					// Check if sprite pixel is on
+					if (m_spritepixel)
 					{
-						// Screen pixel also on - collision
-						if (*screenPixel == 0xFFFFFFFF)
+						// The pixel was already turned on, collision
+						if (*m_displaypixel == 0xFFFFFFFF)
 						{
+							// Set collision detector register (VF) to 1
 							V[F] = 1;
 						}
 
-						// Effectively XOR with the sprite pixel
-						*screenPixel ^= 0xFFFFFFFF;
+						// XOR the sprite pixel
+						*m_displaypixel ^= 0xFFFFFFFF;
 					}
 				}
 			}
