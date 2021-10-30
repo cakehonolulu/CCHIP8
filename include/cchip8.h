@@ -191,6 +191,9 @@ typedef struct chip8
 #define NN M_GET_NN_FROM_OPCODE(M_OPCODE)
 #define NNN M_GET_NNN_FROM_OPCODE(M_OPCODE)
 
+#define POP ({SS[SP] = 0; SP--;})
+#define PUSH(x) ({SS[SP] = x; SP++;})
+
 void m_exec(m_chip8 *chip8);
 
 // SDL2 Icon using RAW Data Method by blog.gibson.sh

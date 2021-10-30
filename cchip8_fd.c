@@ -49,10 +49,8 @@ void m_exec(m_chip8 *chip8)
 					Return from a subroutine
 				*/
 				case 0x00EE:
-					// TODO: Stack push-pop function to simplify the code
-
 					// Decrease the stack pointer by 1
-					SP--;
+					POP;
 
 					// Set the program counter to the stack value pointed by stack pointer
 					PC = SS[SP];
@@ -103,14 +101,9 @@ void m_exec(m_chip8 *chip8)
 				When I first made the 2NNN implementation, I forgot that I had to push the current program counter
 				address to the stack and update the stack pointer accordingly
 			*/
-
-			// TODO: Stack push-pop function to simplify the code
-
+			
 			// Push the current program counter to the stack at current stack pointer position
-			SS[SP] = PC;
-
-			// Increase the stack pointer by 1
-			SP++;
+			PUSH(PC);
 
 			// Set the program counter to the address provided by the opcode
 			PC = NNN;
