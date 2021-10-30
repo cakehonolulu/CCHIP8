@@ -3,9 +3,7 @@
 // Fetch memory and construct the opcode based on the program counter
 uint16_t m_fetch(m_chip8 *chip8)
 {
-	uint16_t m_opcode = (RAM[PC]) << 8
-				| (RAM[PC + 1]);
-
+	uint16_t m_opcode = (RAM[PC]) << 8 | (RAM[PC + 1]);
 	return m_opcode;
 }
 
@@ -101,7 +99,7 @@ void m_exec(m_chip8 *chip8)
 				When I first made the 2NNN implementation, I forgot that I had to push the current program counter
 				address to the stack and update the stack pointer accordingly
 			*/
-			
+
 			// Push the current program counter to the stack at current stack pointer position
 			PUSH(PC);
 
@@ -242,9 +240,6 @@ void m_exec(m_chip8 *chip8)
 					// Find V(x) register value, add V(y) value to it
 					VX += VY;
 
-					// Sum V(x) and V(y)
-					uint16_t m_add = VX + VY;
-
 					/*
 						Check if the addition overflowed
 						If it overflowed, set VF (Flag Register) to 1, else to 0
@@ -254,7 +249,7 @@ void m_exec(m_chip8 *chip8)
 						perform an addition and compare it against UCHAR_MAX
 						to decide wether to flip VF or not.
 					*/
-                    if (m_add > UCHAR_MAX)
+                    if ((VX + VY) > UCHAR_MAX)
                         VF = 1;
                     else
                         VF = 0;
