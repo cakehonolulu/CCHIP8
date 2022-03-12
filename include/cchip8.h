@@ -7,7 +7,7 @@
 // For UCHAR_MAX
 #include <limits.h>
 
-#ifdef __unix__
+#ifdef __unix__ || __APPLE__
 #include <time.h>
 #endif
 

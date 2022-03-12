@@ -1,6 +1,6 @@
 #include "include/cchip8.h"
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
+#ifdef __MINGW32__ || __MINGW64__
 /*
 	NOTE:
 	A good idea would probably be define main() as WinMain (Following <windows.h> spec).
@@ -10,13 +10,13 @@
 int main(int argc, char **argv)
 #endif
 
-#ifdef __unix__
+#ifdef __unix__ || __APPLE__
 int main(int argc, char **argv)
 #endif
 {
 	printf("CCHIP8 - A C-21 Multiplatform CHIP8 Bytecode Interpreter Emulator\n");
 
-#ifdef __unix__
+#ifdef __unix__ || __APPLE__
 	// Check for commandline arguments
 	if (argc < 2)
 	{
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	// Declare a char pointer with the name of the filename to load
 	const char *m_filename = NULL;
 
-#ifdef __unix__
+#ifdef __unix__ || __APPLE__
 	bool m_foundrom = false;
 
 	for (int i = 1; i < argc; i++)
@@ -87,12 +87,12 @@ int main(int argc, char **argv)
 	}
 #endif
 	
-#if defined(__MINGW32__) || defined(__MINGW64__)
+#ifdef __MINGW32__ || __MINGW64__
 	// Use a char array to store the program name for later use
 	m_filename = "rom.ch8";
 #endif
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
+#ifdef __MINGW32__ || __MINGW64__
 	printf("Running under Windows!\n");
 #endif
 
@@ -459,7 +459,7 @@ int main(int argc, char **argv)
 		if (m_dbgmode == false)
 		{
 
-#if defined(__MINGW32__) || defined(__MINGW64__)
+#ifdef MINGW32__ || __MINGW64__
 			/*
 				NOTE:
 				mingw complains about using usleep, _sleep is deprecated so we *should*
@@ -468,7 +468,7 @@ int main(int argc, char **argv)
 			*/
 			usleep(1500);
 #endif
-#ifdef __unix__
+#ifdef __unix__ || __APPLE__
 			struct timespec time1, time2;
 			time1.tv_sec = 0;
 			time1.tv_nsec = 1500000;
