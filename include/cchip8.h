@@ -63,21 +63,21 @@ static const uint8_t m_font[CHIP8_FONT_SIZE] = {
 #define CHIP8_SPRITEHEIGHT 8
 
 static const uint8_t m_sdl_keys[CHIP8_KEYS] = {
-    SDLK_1, // 0
-    SDLK_2, // 1
-    SDLK_3, // 2
-    SDLK_4, // 3
+    SDLK_x, // 0
+    SDLK_1, // 1
+    SDLK_2, // 2
+    SDLK_3, // 3
     SDLK_q, // 4
     SDLK_w, // 5
     SDLK_e, // 6
-    SDLK_r, // 7
-    SDLK_a, // 8
-    SDLK_s, // 9
-    SDLK_d, // A
-    SDLK_f, // B
-    SDLK_z, // C
-    SDLK_x, // D
-    SDLK_c, // E
+    SDLK_a, // 7
+    SDLK_s, // 8
+    SDLK_d, // 9
+    SDLK_z, // A
+    SDLK_c, // B
+    SDLK_4, // C
+    SDLK_r, // D
+    SDLK_f, // E
     SDLK_v  // F
 };
 
