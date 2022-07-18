@@ -6,3 +6,6 @@ cchip8
 # ROM Files
 *.ch8
 *.rom
+
+# Codium Files
+.vscode
